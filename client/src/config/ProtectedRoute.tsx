@@ -20,8 +20,6 @@ const ADMIN_ONLY_CUSTOMER_PATHS = [
   "/customer/profile/create", // Admin creates customer profiles
   "/customer/services/assign", // Admin assigns services
   "/customer/vehicle/assign", // Admin assigns vehicles
-  "/customer/tags/generate", // Admin generates tags for customers
-  "/customer/services/activate", // Admin activates services
 ];
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({

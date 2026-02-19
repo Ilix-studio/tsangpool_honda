@@ -7,7 +7,7 @@ import {
   Check,
   CheckCircle,
   AlertCircle,
-  Tags,
+
 } from "lucide-react";
 import { resetSetupProgress } from "@/redux-store/slices/setupProgressSlice";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -19,7 +19,7 @@ import {
   setProfileCompleted,
   setVehicleCompleted,
   setSelectVASCompleted,
-  setGenerateTagsCompleted,
+
 } from "@/redux-store/slices/setupProgressSlice";
 
 interface ActionItem {
@@ -59,9 +59,6 @@ const InitialDashboard: React.FC = () => {
       case "select-vas":
         dispatch(setSelectVASCompleted(true));
         break;
-      case "generate-tags":
-        dispatch(setGenerateTagsCompleted(true));
-        break;
       // Profile completion is handled via API/navigation state
     }
     originalOnClick();
@@ -73,10 +70,6 @@ const InitialDashboard: React.FC = () => {
 
   const onAddMotorcycle = () => {
     navigate("/customer/select/stock");
-  };
-
-  const onGenerateTags = () => {
-    navigate("/customer/tags/generate");
   };
 
   const onVAS = () => {
@@ -113,16 +106,6 @@ const InitialDashboard: React.FC = () => {
       onClick: onVAS,
       description: "Unlock Value Added Services",
       completed: setupProgress.selectVAS,
-    },
-
-    {
-      id: "generate-tags",
-      title: "Generate Tags",
-      buttonText: "Generate",
-      icon: Tags,
-      onClick: onGenerateTags,
-      description: "Tsangphool Honda Safety Feature",
-      completed: setupProgress.generateTags,
     },
   ];
   const totalTasks = actionItems.length;

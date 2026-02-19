@@ -1,10 +1,7 @@
+import { PopulatedCustomerVehicleListResponse, PopulatedCustomerVehicleResponse, ServiceHistoryResponse, VehiclesByPhoneResponse } from "@/types/superAd_Cu.types";
 import { apiSlice } from "../apiSlice";
 import { handleApiError } from "@/lib/apiConfig";
-import {
-  PopulatedCustomerVehicleListResponse,
-  PopulatedCustomerVehicleResponse,
-  ServiceHistoryResponse,
-} from "../BikeSystemApi2/AdminVehicleApi";
+
 
 export const customerVehicleApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -39,6 +36,14 @@ export const customerVehicleApi = apiSlice.injectEndpoints({
       transformErrorResponse: (response) => handleApiError(response),
     }),
 
+    // Inside injectEndpoints:
+    getVehiclesByPhone: builder.query<VehiclesByPhoneResponse, string>({
+      query: (phone) => `/customer-vehicles/by-phone/${phone}`,
+      // No isCustomer — this is admin-facing
+      providesTags: ["CustomerVehicle"],
+      transformErrorResponse: (response) => handleApiError(response),
+    }),
+
     // Check vehicle eligibility for services
     checkVehicleEligibility: builder.query<
       {
@@ -62,8 +67,5 @@ export const {
   useGetCustomerVehicleByIdQuery,
   useGetVehicleServiceHistoryQuery,
   useCheckVehicleEligibilityQuery,
-  useLazyGetMyVehiclesQuery,
-  useLazyGetCustomerVehicleByIdQuery,
-  useLazyGetVehicleServiceHistoryQuery,
-  useLazyCheckVehicleEligibilityQuery,
-} = customerVehicleApi;
+  useGetVehiclesByPhoneQuery,   
+} = customerVehicleApi; 
