@@ -171,7 +171,7 @@ const CustomerCreateProfile: React.FC = () => {
 
       // Mark as completed and navigate back
       dispatch(setProfileCompleted(true));
-      navigate("/customer/initialize", {
+      navigate("/customer/first-dash", {
         state: { profileCompleted: true },
       });
     } catch (err) {

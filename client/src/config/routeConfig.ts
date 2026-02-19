@@ -6,6 +6,7 @@ import Home from "../Home";
 import NotFoundPage from "../mainComponents/NotFoundPage";
 import { ViewBikeImage } from "@/mainComponents/Admin/Bikes/ViewBikeImage";
 
+
 export const immediateRoutes = [
   {
     path: "/",
@@ -155,6 +156,10 @@ const GetAllStockFiles = lazy(
   () => import("@/mainComponents/BikeSsytem3/GetAllStockFiles")
 );
 
+const FirstDash = lazy(
+  () => import("@/mainComponents/CustomerSystem/Dashboards/FirstDash")
+);
+
 // Create admin routes array
 const createAdminRoutes = () => [
   // Authentication
@@ -258,6 +263,7 @@ const createCustomerRoutes = () => {
     { path: "/customer/profile/create", component: CustomerCreateProfile },
 
     // Dashboard
+      { path: "/customer/first-dash", component: FirstDash},
     { path: "/customer/initialize", component: InitialDashboard },
     // Vehicle Management
     { path: "/customer/select/stock", component: ChooseStock },
@@ -274,6 +280,7 @@ const createCustomerRoutes = () => {
     { path: "/customer/tags/generate", component: GenerateTags },
     { path: "/customer/services/vas", component: ActivateVAS },
     { path: "/customer/book-service", component: BookServicePage },
+  
   ];
 };
 
@@ -290,6 +297,12 @@ export const routeConfig: Record<
     menuItems?: Array<{ label: string; href: string }>;
   }
 > = {
+  "/customer/first-dash": {
+  title: "Customer Lookup",
+  subtitle: "Search and manage customer vehicles",
+  showBack: true,
+  backTo: "/admin/dashboard",
+},
   "/customer/dashboard": {
     title: "",
     subtitle: "",

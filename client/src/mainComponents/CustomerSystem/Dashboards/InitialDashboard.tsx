@@ -47,7 +47,7 @@ const InitialDashboard: React.FC = () => {
     if (location.state?.profileCompleted) {
       dispatch(setProfileCompleted(true));
       // Clear the navigation state
-      navigate("/customer/initialize", { replace: true });
+      navigate("/customer/first-dash", { replace: true });
     }
   }, [location.state, navigate, dispatch]);
   const handleItemClick = (itemId: string, originalOnClick: () => void) => {

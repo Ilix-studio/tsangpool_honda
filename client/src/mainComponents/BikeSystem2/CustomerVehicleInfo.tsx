@@ -65,7 +65,7 @@ const CustomerVehicleInfo = () => {
 
       toast.success("Vehicle assigned successfully!");
       dispatch(setVehicleCompleted(true));
-      navigate("/customer/initialize", {
+      navigate("/customer/first-dash", {
         state: { vehicleCompleted: true },
       });
     } catch (error: any) {
