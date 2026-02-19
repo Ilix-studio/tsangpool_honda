@@ -280,6 +280,7 @@ const createCustomerRoutes = () => {
     { path: "/customer/tags/generate", component: GenerateTags },
     { path: "/customer/services/vas", component: ActivateVAS },
     { path: "/customer/book-service", component: BookServicePage },
+    // { path: "/customer/attach-stickers", component: AttachStickers },
   
   ];
 };
