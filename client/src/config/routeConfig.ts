@@ -5,6 +5,7 @@ import { lazy } from "react";
 import Home from "../Home";
 import NotFoundPage from "../mainComponents/NotFoundPage";
 import { ViewBikeImage } from "@/mainComponents/Admin/Bikes/ViewBikeImage";
+import UseToken from "@/mainComponents/Scanfleet/UseToken";
 
 
 export const immediateRoutes = [
@@ -280,7 +281,7 @@ const createCustomerRoutes = () => {
     { path: "/customer/tags/generate", component: GenerateTags },
     { path: "/customer/services/vas", component: ActivateVAS },
     { path: "/customer/book-service", component: BookServicePage },
-    // { path: "/customer/attach-stickers", component: AttachStickers },
+    { path: "/customer/attach-stickers", component: UseToken },
   
   ];
 };

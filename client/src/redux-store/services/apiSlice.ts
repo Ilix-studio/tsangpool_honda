@@ -44,7 +44,8 @@ export const apiSlice = createApi({
     "CSVStock",
     "CSVStockList",
     "CSVBatch",
-    "GetApproved"
+    "GetApproved",
+    "ScanFleetProfile"
   ],
   endpoints: () => ({}),
 });
