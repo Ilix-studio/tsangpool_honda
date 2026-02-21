@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { useActivateScanFleetTokenMutation, useGetScanFleetProfileQuery } from '@/redux-store/services/Scanfleet/scanfleetApi';
 
-export default function UseToken() {
+export default function AttachCode() {
   const navigate = useNavigate();
   const { data: profile, isLoading } = useGetScanFleetProfileQuery();
   const [activateToken, { isLoading: submitting }] = useActivateScanFleetTokenMutation();

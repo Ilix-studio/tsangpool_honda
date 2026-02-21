@@ -5,7 +5,8 @@ import { lazy } from "react";
 import Home from "../Home";
 import NotFoundPage from "../mainComponents/NotFoundPage";
 import { ViewBikeImage } from "@/mainComponents/Admin/Bikes/ViewBikeImage";
-import UseToken from "@/mainComponents/Scanfleet/UseToken";
+
+
 
 
 export const immediateRoutes = [
@@ -248,6 +249,9 @@ const ChooseStock = lazy(
 const CustomerCSVStock = lazy(
   () => import("@/mainComponents/CustomerSystem/SelectStock/CustomerCSVStock")
 );
+const AttachCode = lazy(
+  () => import("@/mainComponents/Scanfleet/AttachCode")
+);
 
 // Create customer routes array
 const createCustomerRoutes = () => {
@@ -281,7 +285,7 @@ const createCustomerRoutes = () => {
     { path: "/customer/tags/generate", component: GenerateTags },
     { path: "/customer/services/vas", component: ActivateVAS },
     { path: "/customer/book-service", component: BookServicePage },
-    { path: "/customer/attach-stickers", component: UseToken },
+    { path: "/customer/attach-stickers", component: AttachCode },
   
   ];
 };
