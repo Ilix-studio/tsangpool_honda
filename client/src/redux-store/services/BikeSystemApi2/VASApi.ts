@@ -113,14 +113,12 @@ export const vasApi = apiSlice.injectEndpoints({
     }),
 
     // ===== CUSTOMER ROUTES =====
-    getCustomerActiveServices: builder.query<
-      CustomerActiveServicesResponse,
-      void
-    >({
-      query: () => "/value-added-services/my-services",
-      providesTags: ["CustomerActiveService"],
-      transformErrorResponse: (response) => handleApiError(response),
-    }),
+getCustomerActiveServices: builder.query<CustomerActiveServicesResponse, void>({
+  query: () => "/value-added-services/my-services",
+  extraOptions: { isCustomer: true }, 
+  providesTags: ["CustomerActiveService"],
+  transformErrorResponse: (response) => handleApiError(response),
+}),
 
     calculateVASPrice: builder.mutation<
       PriceCalculationResponse,

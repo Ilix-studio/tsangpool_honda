@@ -6,7 +6,7 @@ export interface SetupProgressState {
   profile: boolean;
   vehicle: boolean;
   selectVAS: boolean;
-  generateTags: boolean;
+
   lastUpdated: string;
 }
 
@@ -14,7 +14,6 @@ const initialState: SetupProgressState = {
   profile: false,
   vehicle: false,
   selectVAS: false,
-  generateTags: false,
   lastUpdated: "",
 };
 
@@ -34,15 +33,11 @@ const setupProgressSlice = createSlice({
       state.selectVAS = action.payload;
       state.lastUpdated = new Date().toISOString();
     },
-    setGenerateTagsCompleted: (state, action: PayloadAction<boolean>) => {
-      state.generateTags = action.payload;
-      state.lastUpdated = new Date().toISOString();
-    },
+
     resetSetupProgress: (state) => {
       state.profile = false;
       state.vehicle = false;
       state.selectVAS = false;
-      state.generateTags = false;
       state.lastUpdated = "";
     },
     verifyProfileCompletion: (state, action: PayloadAction<boolean>) => {
@@ -64,7 +59,7 @@ const setupProgressSlice = createSlice({
     resetStepCompletion: (
       state,
       action: PayloadAction<
-        "profile" | "vehicle" | "selectVAS" | "generateTags"
+        "profile" | "vehicle" | "selectVAS" 
       >
     ) => {
       state[action.payload] = false;
@@ -77,7 +72,6 @@ export const {
   setProfileCompleted,
   setVehicleCompleted,
   setSelectVASCompleted,
-  setGenerateTagsCompleted,
   resetSetupProgress,
   updateSetupProgress,
   verifyProfileCompletion,
@@ -99,7 +93,7 @@ export const selectCompletedTasks = (state: {
   ).length;
 };
 
-export const selectTotalTasks = () => 4; // profile, vehicle, selectVAS, generateTags
+export const selectTotalTasks = () => 4; // profile, vehicle, selectVAS,
 
 export const selectCompletionPercentage = (state: {
   setupProgress: SetupProgressState;
@@ -115,7 +109,7 @@ export default setupProgressSlice.reducer;
 const persistConfig = {
   key: "setupProgress",
   storage,
-  whitelist: ["profile", "vehicle", "selectVAS", "generateTags", "lastUpdated"], // Only persist these fields
+  whitelist: ["profile", "vehicle", "selectVAS",  "lastUpdated"], // Only persist these fields
 };
 
 // Export persisted reducer
