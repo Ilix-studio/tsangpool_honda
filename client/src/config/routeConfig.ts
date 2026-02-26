@@ -225,9 +225,7 @@ const CustomerVehicleInfo = lazy(
 );
 
 // Customer Services
-const GenerateTags = lazy(
-  () => import("../mainComponents/CustomerSystem/GenerateTags")
-);
+
 const ActivateVAS = lazy(
   () => import("../mainComponents/CustomerSystem/ActivateFeature/ActivateVAS")
 );
@@ -282,7 +280,7 @@ const createCustomerRoutes = () => {
     { path: "/customer/support", component: CustomerSupport },
 
     // Select Services by Admin
-    { path: "/customer/tags/generate", component: GenerateTags },
+ 
     { path: "/customer/services/vas", component: ActivateVAS },
     { path: "/customer/book-service", component: BookServicePage },
     { path: "/customer/attach-stickers", component: AttachCode },
