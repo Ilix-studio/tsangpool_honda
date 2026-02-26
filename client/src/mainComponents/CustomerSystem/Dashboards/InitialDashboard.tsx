@@ -47,8 +47,9 @@ const InitialDashboard: React.FC = () => {
     if (location.state?.profileCompleted) {
       dispatch(setProfileCompleted(true));
       // Clear the navigation state
-      navigate("/customer/first-dash", { replace: true });
+      navigate("/customer/initialize", { replace: true });
     }
+ 
   }, [location.state, navigate, dispatch]);
   const handleItemClick = (itemId: string, originalOnClick: () => void) => {
     // Mark appropriate item as completed when clicked
@@ -75,6 +76,7 @@ const InitialDashboard: React.FC = () => {
   const onVAS = () => {
     navigate("/customer/services/vas");
   };
+
 
   const actionItems: ActionItem[] = [
     {
@@ -107,6 +109,7 @@ const InitialDashboard: React.FC = () => {
       description: "Unlock Value Added Services",
       completed: setupProgress.selectVAS,
     },
+ 
   ];
   const totalTasks = actionItems.length;
   const isProfileCompleted = setupProgress.profile;
@@ -255,6 +258,24 @@ const InitialDashboard: React.FC = () => {
                 );
               })}
             </div>
+            {completedTasks === totalTasks && (
+              <div className="mt-8 flex justify-center gap-4">
+                 <Button
+                  onClick={() => navigate("/customer/select/stock", { replace: true })}
+                  className="px-10 py-3 text-base bg-green-600 hover:bg-green-700 text-white"
+                >
+                  <CheckCircle className="h-5 w-5 mr-2" />
+                  Add another Vehicle
+                </Button>
+                <Button
+                  onClick={() => navigate("/customer/first-dash", { replace: true })}
+                  className="px-10 py-3 text-base bg-blue-600 hover:bg-blue-700 text-white"
+                >
+                  <CheckCircle className="h-5 w-5 mr-2" />
+                  Go to Dashboard
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       </div>
