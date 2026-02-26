@@ -60,7 +60,7 @@ const ActivateVAS = () => {
       }).unwrap();
 
       toast.success(result.message || "VAS activated successfully!");
-      navigate("/customer/dashboard");
+      navigate("/customer/initialize");
     } catch (error: any) {
       console.error("Full error object:", error);
 

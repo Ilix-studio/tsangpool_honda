@@ -2,11 +2,7 @@ import { createApi, BaseQueryFn, FetchArgs, FetchBaseQueryError } from "@reduxjs
 import { baseQuery } from "../../lib/apiConfig";
 import { customerBaseQuery } from "../../lib/customerApiConfigs";
 
-const dynamicBaseQuery: BaseQueryFn<
-  string | FetchArgs,
-  unknown,
-  FetchBaseQueryError
-> = async (args, api, extraOptions) => {
+const dynamicBaseQuery: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (args, api, extraOptions) => {
   if ((extraOptions as any)?.isCustomer) {
     return customerBaseQuery(args, api, extraOptions);
   }
@@ -44,7 +40,10 @@ export const apiSlice = createApi({
     "CSVStock",
     "CSVStockList",
     "CSVBatch",
-    "GetApproved"
+    "GetApproved",
+    "ScanFleetProfile",
+    "VAS",
+    "CustomerActiveService",
   ],
   endpoints: () => ({}),
 });

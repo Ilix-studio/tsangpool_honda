@@ -7,6 +7,8 @@ import NotFoundPage from "../mainComponents/NotFoundPage";
 import { ViewBikeImage } from "@/mainComponents/Admin/Bikes/ViewBikeImage";
 
 
+
+
 export const immediateRoutes = [
   {
     path: "/",
@@ -223,9 +225,7 @@ const CustomerVehicleInfo = lazy(
 );
 
 // Customer Services
-const GenerateTags = lazy(
-  () => import("../mainComponents/CustomerSystem/GenerateTags")
-);
+
 const ActivateVAS = lazy(
   () => import("../mainComponents/CustomerSystem/ActivateFeature/ActivateVAS")
 );
@@ -246,6 +246,9 @@ const ChooseStock = lazy(
 );
 const CustomerCSVStock = lazy(
   () => import("@/mainComponents/CustomerSystem/SelectStock/CustomerCSVStock")
+);
+const AttachCode = lazy(
+  () => import("@/mainComponents/Scanfleet/AttachCode")
 );
 
 // Create customer routes array
@@ -277,10 +280,10 @@ const createCustomerRoutes = () => {
     { path: "/customer/support", component: CustomerSupport },
 
     // Select Services by Admin
-    { path: "/customer/tags/generate", component: GenerateTags },
+ 
     { path: "/customer/services/vas", component: ActivateVAS },
     { path: "/customer/book-service", component: BookServicePage },
-    // { path: "/customer/attach-stickers", component: AttachStickers },
+    { path: "/customer/attach-stickers", component: AttachCode },
   
   ];
 };
