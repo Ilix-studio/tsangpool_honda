@@ -74,52 +74,6 @@ export interface ICustomerVehicle {
   updatedAt: Date;
 }
 
-// Populated Vehicle Interface (with related data)
-export interface IPopulatedCustomerVehicle
-  extends Omit<ICustomerVehicle, "stockConcept"> {
-  stockConcept?: {
-    _id: string;
-    stockId: string;
-    bikeInfo: {
-      bikeModelId: string;
-      modelName: string;
-      category: string;
-      engineCC: number;
-      fuelType: string;
-      color: string;
-      variant: string;
-      yearOfManufacture: number;
-    };
-    engineDetails: {
-      engineNumber: string;
-      chassisNumber: string;
-      engineType: string;
-      maxPower: string;
-      maxTorque: string;
-      displacement: number;
-    };
-    priceInfo: {
-      exShowroomPrice: number;
-      roadTax: number;
-      insurance: number;
-      additionalCharges: number;
-      onRoadPrice: number;
-      discount?: number;
-      finalPrice: number;
-    };
-  };
-  customerPhoneNumberDetails?: {
-    _id: string;
-    name: string;
-    email: string;
-    phone: string;
-  };
-  servicePackageDetails?: {
-    _id: string;
-    serviceName: any; // ServicePackage details
-  };
-}
-
 // Request/Response Types
 export interface CustomerVehicleResponse {
   success: boolean;
@@ -325,4 +279,47 @@ export interface VehiclesByPhoneResponse {
   count: number;
   data: IPopulatedCustomerVehicle[];
   message?: string;
+}
+
+export interface IPopulatedStockConcept {
+  _id: string;
+  stockId: string;
+  modelName: string;
+  category?: string; // StockConcept has this, CSV may not
+  engineCC?: number;
+  color: string;
+  variant?: string;
+  yearOfManufacture?: number;
+  engineNumber?: string;
+  chassisNumber?: string;
+  priceInfo?: {
+    exShowroomPrice: number;
+    roadTax: number;
+    onRoadPrice: number;
+  };
+}
+
+export interface IPopulatedVAS {
+  _id: string;
+  serviceId:
+    | {
+        _id: string;
+        serviceName: string;
+        coverageYears: number;
+        priceStructure: { basePrice: number };
+        benefits: string[];
+        isActive: boolean;
+      }
+    | string; // string when not populated
+  activatedDate: string;
+  expiryDate: string;
+  purchasePrice: number;
+  coverageYears: number;
+  isActive: boolean;
+}
+
+export interface IPopulatedCustomerVehicle
+  extends Omit<ICustomerVehicle, "stockConcept" | "activeValueAddedServices"> {
+  stockConcept?: IPopulatedStockConcept;
+  activeValueAddedServices: IPopulatedVAS[];
 }

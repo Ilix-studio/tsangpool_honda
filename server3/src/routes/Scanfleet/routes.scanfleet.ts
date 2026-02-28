@@ -1,13 +1,14 @@
 import express from "express";
-import { protect, authorize } from "../../middleware/authmiddleware";
+
 import {
   getScanFleetProfile,
   activateScanFleetToken,
 } from "../../controllers/Scanfleet/scanfleet.controller";
+import { protectCustomer } from "../../middleware/customerMiddleware";
 
 const router = express.Router();
 
-router.get("/profile", protect, getScanFleetProfile);
-router.post("/activate", protect, activateScanFleetToken);
+router.get("/profile", protectCustomer, getScanFleetProfile);
+router.post("/activate", protectCustomer, activateScanFleetToken);
 
 export default router;

@@ -244,7 +244,11 @@ const ChooseStock = lazy(
 const CustomerCSVStock = lazy(
   () => import("@/mainComponents/CustomerSystem/SelectStock/CustomerCSVStock")
 );
-const AttachCode = lazy(() => import("@/mainComponents/Scanfleet/AttachCode"));
+const UseToken = lazy(() => import("@/mainComponents/Scanfleet/UseToken"));
+
+const CustomerVehicleDetail = lazy(
+  () => import("@/mainComponents/BikeSystem2/CustomerVehicleDetail")
+);
 
 // Create customer routes array
 const createCustomerRoutes = () => {
@@ -267,6 +271,7 @@ const createCustomerRoutes = () => {
     { path: "/customer/select/stock", component: ChooseStock },
     { path: "/customer/assign/csv-stock", component: CustomerCSVStock },
     { path: "/customer/vehicle/info", component: CustomerVehicleInfo },
+    { path: "/customer/vehicle/:vehicleId", component: CustomerVehicleDetail },
 
     //
     { path: "/customer/dashboard", component: CustomerMainDash },
@@ -278,7 +283,7 @@ const createCustomerRoutes = () => {
 
     { path: "/customer/services/vas", component: ActivateVAS },
     { path: "/customer/book-service", component: BookServicePage },
-    { path: "/customer/attach-stickers", component: AttachCode },
+    { path: "/customer/attach-stickers", component: UseToken },
   ];
 };
 
