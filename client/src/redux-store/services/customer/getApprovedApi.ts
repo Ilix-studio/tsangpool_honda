@@ -1,23 +1,36 @@
 import { apiSlice } from "../apiSlice";
 import {
-  CheckStatusRequest, CheckStatusResponse, DeleteApplicationResponse,
-  GetApplicationByIdResponse, GetApplicationsFilters, GetApplicationsResponse,
-  GetStatsResponse, SubmitApplicationRequest, SubmitApplicationResponse,
-  UpdateStatusRequest, UpdateStatusResponse,
+  CheckStatusRequest,
+  CheckStatusResponse,
+  DeleteApplicationResponse,
+  GetApplicationByIdResponse,
+  GetApplicationsFilters,
+  GetApplicationsResponse,
+  GetStatsResponse,
+  SubmitApplicationRequest,
+  SubmitApplicationResponse,
+  UpdateStatusRequest,
+  UpdateStatusResponse,
 } from "@/types/getApproved.types";
 
 export const getApprovedApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    submitApplication: builder.mutation<SubmitApplicationResponse, SubmitApplicationRequest>({
+    submitApplication: builder.mutation<
+      SubmitApplicationResponse,
+      SubmitApplicationRequest
+    >({
       query: (applicationData) => ({
-        url: "/getapproved",
+        url: "/getapproved/add",
         method: "POST",
         body: applicationData,
       }),
       invalidatesTags: ["GetApproved", "GetApprovedStats"],
     }),
 
-    checkApplicationStatus: builder.mutation<CheckStatusResponse, CheckStatusRequest>({
+    checkApplicationStatus: builder.mutation<
+      CheckStatusResponse,
+      CheckStatusRequest
+    >({
       query: (data) => ({
         url: "/getapproved/check-status",
         method: "POST",
@@ -30,14 +43,21 @@ export const getApprovedApi = apiSlice.injectEndpoints({
       providesTags: (_result, _error, id) => [{ type: "GetApproved", id }],
     }),
 
-    getAllApplications: builder.query<GetApplicationsResponse, GetApplicationsFilters>({
+    getAllApplications: builder.query<
+      GetApplicationsResponse,
+      GetApplicationsFilters
+    >({
       query: (filters) => {
         const params = new URLSearchParams();
-        if (filters.page !== undefined) params.append("page", filters.page.toString());
-        if (filters.limit !== undefined) params.append("limit", filters.limit.toString());
+        if (filters.page !== undefined)
+          params.append("page", filters.page.toString());
+        if (filters.limit !== undefined)
+          params.append("limit", filters.limit.toString());
         if (filters.status) params.append("status", filters.status);
-        if (filters.employmentType) params.append("employmentType", filters.employmentType);
-        if (filters.creditScoreRange) params.append("creditScoreRange", filters.creditScoreRange);
+        if (filters.employmentType)
+          params.append("employmentType", filters.employmentType);
+        if (filters.creditScoreRange)
+          params.append("creditScoreRange", filters.creditScoreRange);
         if (filters.search) params.append("search", filters.search);
         if (filters.sortBy) params.append("sortBy", filters.sortBy);
         if (filters.sortOrder) params.append("sortOrder", filters.sortOrder);
@@ -50,14 +70,19 @@ export const getApprovedApi = apiSlice.injectEndpoints({
       providesTags: ["GetApproved"],
     }),
 
-    updateApplicationStatus: builder.mutation<UpdateStatusResponse, { id: string; data: UpdateStatusRequest }>({
+    updateApplicationStatus: builder.mutation<
+      UpdateStatusResponse,
+      { id: string; data: UpdateStatusRequest }
+    >({
       query: ({ id, data }) => ({
         url: `/getapproved/${id}/status`,
         method: "PUT",
         body: data,
       }),
       invalidatesTags: (_result, _error, { id }) => [
-        { type: "GetApproved", id }, "GetApproved", "GetApprovedStats",
+        { type: "GetApproved", id },
+        "GetApproved",
+        "GetApprovedStats",
       ],
     }),
 
@@ -67,7 +92,9 @@ export const getApprovedApi = apiSlice.injectEndpoints({
         method: "DELETE",
       }),
       invalidatesTags: (_result, _error, id) => [
-        { type: "GetApproved", id }, "GetApproved", "GetApprovedStats",
+        { type: "GetApproved", id },
+        "GetApproved",
+        "GetApprovedStats",
       ],
     }),
 
@@ -82,11 +109,15 @@ export const getApprovedApi = apiSlice.injectEndpoints({
     >({
       query: ({ branchId, filters = {} }) => {
         const params = new URLSearchParams();
-        if (filters.page !== undefined) params.append("page", filters.page.toString());
-        if (filters.limit !== undefined) params.append("limit", filters.limit.toString());
+        if (filters.page !== undefined)
+          params.append("page", filters.page.toString());
+        if (filters.limit !== undefined)
+          params.append("limit", filters.limit.toString());
         if (filters.status) params.append("status", filters.status);
         const queryString = params.toString();
-        return `/getapproved/branch/${branchId}${queryString ? `?${queryString}` : ""}`;
+        return `/getapproved/branch/${branchId}${
+          queryString ? `?${queryString}` : ""
+        }`;
       },
       providesTags: (_result, _error, { branchId }) => [
         { type: "GetApproved", id: `branch-${branchId}` },

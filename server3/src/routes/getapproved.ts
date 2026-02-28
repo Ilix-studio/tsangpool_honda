@@ -24,7 +24,7 @@ const router = express.Router();
 // Public routes - SPECIFIC ROUTES FIRST
 router.post("/check-status", checkApplicationStatus);
 router.post("/with-bike", submitApplicationWithBike);
-router.post("/", submitApplication); // This must come after more specific POST routes
+router.post("/add", submitApplication); // This must come after more specific POST routes
 
 // Protected routes - SPECIFIC ROUTES FIRST
 router.get(
