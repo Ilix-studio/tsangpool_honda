@@ -39,7 +39,7 @@ export const activateToCustomer = asyncHandler(
     if (!customerId || !salePrice || !invoiceNumber) {
       res.status(400);
       throw new Error(
-        "Please provide customer ID, sale price, and invoice number",
+        "Please provide customer ID, sale price, and invoice number"
       );
     }
 
@@ -82,6 +82,7 @@ export const activateToCustomer = asyncHandler(
     // Create customer vehicle record
     const customerVehicle = await CustomerVehicleModel.create({
       stockConcept: stockItem._id,
+      stockType: "StockConcept",
       modelName: stockItem.modelName,
       registrationDate: registrationDate
         ? new Date(registrationDate)
@@ -135,7 +136,7 @@ export const activateToCustomer = asyncHandler(
     const userId = req.user?._id || "system";
 
     logger.info(
-      `Stock item ${stockItem.stockId} assigned to customer ${customer.phoneNumber} by ${userId}`,
+      `Stock item ${stockItem.stockId} assigned to customer ${customer.phoneNumber} by ${userId}`
     );
 
     res.status(200).json({
@@ -149,5 +150,5 @@ export const activateToCustomer = asyncHandler(
         },
       },
     });
-  },
+  }
 );
