@@ -22,7 +22,7 @@ export const createValueAddedService = asyncHandler(
     if (!serviceName || !coverageYears || !priceStructure?.basePrice) {
       res.status(400);
       throw new Error(
-        "Missing required fields: serviceName, coverageYears, priceStructure.basePrice",
+        "Missing required fields: serviceName, coverageYears, priceStructure.basePrice"
       );
     }
 
@@ -52,7 +52,7 @@ export const createValueAddedService = asyncHandler(
       message: "Service created successfully",
       data: service,
     });
-  },
+  }
 );
 
 /**
@@ -86,7 +86,7 @@ export const getAllValueAddedServices = asyncHandler(
       currentPage: page,
       data: services,
     });
-  },
+  }
 );
 
 /**
@@ -97,7 +97,7 @@ export const getAllValueAddedServices = asyncHandler(
 export const getValueAddedServiceById = asyncHandler(
   async (req: Request, res: Response) => {
     const service = await ValueAddedServiceModel.findById(
-      req.params.id,
+      req.params.id
     ).populate("applicableBranches", "branchName address");
 
     if (!service) {
@@ -109,7 +109,7 @@ export const getValueAddedServiceById = asyncHandler(
       success: true,
       data: service,
     });
-  },
+  }
 );
 
 /**
@@ -122,7 +122,7 @@ export const updateValueAddedService = asyncHandler(
     const service = await ValueAddedServiceModel.findByIdAndUpdate(
       req.params.id,
       req.body,
-      { new: true, runValidators: true },
+      { new: true, runValidators: true }
     ).populate("applicableBranches", "branchName address");
 
     if (!service) {
@@ -137,7 +137,7 @@ export const updateValueAddedService = asyncHandler(
       message: "Service updated successfully",
       data: service,
     });
-  },
+  }
 );
 
 /**
@@ -150,7 +150,7 @@ export const deleteValueAddedService = asyncHandler(
     const service = await ValueAddedServiceModel.findByIdAndUpdate(
       req.params.id,
       { isActive: false },
-      { new: true },
+      { new: true }
     );
 
     if (!service) {
@@ -164,7 +164,7 @@ export const deleteValueAddedService = asyncHandler(
       success: true,
       message: "Service deleted successfully",
     });
-  },
+  }
 );
 
 /**
@@ -177,7 +177,7 @@ export const getCustomerEligibleServices = asyncHandler(
     const customerId = req.customer?._id;
 
     const vehicles = await CustomerVehicleModel.find({
-      customerPhoneNumber: customerId,
+      customer: customerId,
       isActive: true,
     });
 
@@ -195,7 +195,7 @@ export const getCustomerEligibleServices = asyncHandler(
         const vehicleAgeMonths = Math.floor(
           (new Date().getTime() -
             new Date(vehicle.registrationDate || vehicle.createdAt).getTime()) /
-            (1000 * 60 * 60 * 24 * 30),
+            (1000 * 60 * 60 * 24 * 30)
         );
 
         // Find eligible services
@@ -207,7 +207,7 @@ export const getCustomerEligibleServices = asyncHandler(
         });
 
         const eligibleForVehicle = services.filter(
-          (service) => (service as any).isVehicleEligible(125, "commuter"), // Mock data
+          (service) => (service as any).isVehicleEligible(125, "commuter") // Mock data
         );
 
         return {
@@ -220,14 +220,14 @@ export const getCustomerEligibleServices = asyncHandler(
           },
           eligibleServices: eligibleForVehicle,
         };
-      }),
+      })
     );
 
     res.status(200).json({
       success: true,
       data: eligibleServices,
     });
-  },
+  }
 );
 
 /**
@@ -250,7 +250,7 @@ export const calculateServicePrice = asyncHandler(
     const engineCapacity = 125; // Mock - extract from vehicle data
     const price = (service as any).calculatePrice(
       engineCapacity,
-      selectedYears,
+      selectedYears
     );
 
     res.status(200).json({
@@ -262,7 +262,7 @@ export const calculateServicePrice = asyncHandler(
         calculatedPrice: price,
       },
     });
-  },
+  }
 );
 
 /**
@@ -280,7 +280,7 @@ export const getServicesByType = asyncHandler(
       validFrom: { $lte: new Date() },
       validUntil: { $gte: new Date() },
     }).select(
-      "serviceName description benefits coverage priceStructure badges",
+      "serviceName description benefits coverage priceStructure badges"
     );
 
     res.status(200).json({
@@ -288,7 +288,7 @@ export const getServicesByType = asyncHandler(
       count: services.length,
       data: services,
     });
-  },
+  }
 );
 
 /**
@@ -307,7 +307,7 @@ export const getCustomerActiveServices = asyncHandler(
       .populate("customerPhoneNumber", "phoneNumber")
       .populate(
         "activeValueAddedServices.serviceId",
-        "serviceName serviceType description",
+        "serviceName serviceType description"
       );
 
     // Use the activeValueAddedServices array from the vehicle model
@@ -337,7 +337,7 @@ export const getCustomerActiveServices = asyncHandler(
       success: true,
       data: activeServices,
     });
-  },
+  }
 );
 
 /**
@@ -396,5 +396,5 @@ export const getCustomersWithActiveVAS = asyncHandler(
       currentPage: page,
       data: customersWithVAS,
     });
-  },
+  }
 );

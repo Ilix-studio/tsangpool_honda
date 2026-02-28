@@ -12,7 +12,7 @@ import {
 } from "@/redux-store/slices/setupProgressSlice";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
-import { useGetCustomerActiveServicesQuery } from "@/redux-store/services/BikeSystemApi2/VASApi";
+
 import { useGetCustomerProfileQuery } from "@/redux-store/services/customer/customerApi";
 import { useGetMyVehiclesQuery } from "@/redux-store/services/customer/customerVehicleApi";
 import { selectCustomerAuth } from "@/redux-store/slices/customer/customerAuthSlice";
@@ -32,7 +32,7 @@ const InitialDashboard: React.FC = () => {
   const location = useLocation();
   const dispatch = useAppDispatch();
 
-  const { isAuthenticated } = useAppSelector(selectCustomerAuth);
+  const { customer: isAuthenticated } = useAppSelector(selectCustomerAuth);
   const setupProgress = useAppSelector(selectSetupProgress);
   const completedTasks = useAppSelector(selectCompletedTasks);
 
@@ -46,15 +46,10 @@ const InitialDashboard: React.FC = () => {
   const { data: vehicleData, isSuccess: vehiclesLoaded } =
     useGetMyVehiclesQuery(undefined, { skip: !isAuthenticated });
 
-  const { data: vasData, isSuccess: vasLoaded } =
-    useGetCustomerActiveServicesQuery(undefined, { skip: !isAuthenticated });
+  // ── Hydrate Redux from backend on mount ────────────────────────────
 
-  // Temp debug
-  console.log("Profile query result:", {
-    profileData,
-    profileLoaded,
-    profileError,
-  });
+  // Profile: check customerprofiles doc; if 404/empty but authenticated,
+  // the customer exists in basecustomers but hasn't filled the profile form yet.
   useEffect(() => {
     if (profileLoaded) {
       dispatch(setProfileCompleted(!!profileData?.data));
@@ -74,15 +69,15 @@ const InitialDashboard: React.FC = () => {
   }, [vehiclesLoaded, vehicleData, dispatch]);
 
   useEffect(() => {
-    if (vasLoaded) {
+    if (vehiclesLoaded && vehicleData?.data) {
       const hasActiveVAS =
-        Array.isArray(vasData?.data) &&
-        vasData.data.some((entry: any) =>
-          entry.services?.some((s: any) => s.isActive)
+        Array.isArray(vehicleData.data) &&
+        vehicleData.data.some((vehicle: any) =>
+          vehicle.activeValueAddedServices?.some((s: any) => s.isActive)
         );
       dispatch(setSelectVASCompleted(hasActiveVAS));
     }
-  }, [vasLoaded, vasData, dispatch]);
+  }, [vehiclesLoaded, vehicleData, dispatch]);
 
   // ── Handle navigation state from profile creation ──────────────────
   useEffect(() => {
