@@ -113,12 +113,15 @@ export const vasApi = apiSlice.injectEndpoints({
     }),
 
     // ===== CUSTOMER ROUTES =====
-getCustomerActiveServices: builder.query<CustomerActiveServicesResponse, void>({
-  query: () => "/value-added-services/my-services",
-  extraOptions: { isCustomer: true }, 
-  providesTags: ["CustomerActiveService"],
-  transformErrorResponse: (response) => handleApiError(response),
-}),
+    getCustomerActiveServices: builder.query<
+      CustomerActiveServicesResponse,
+      void
+    >({
+      query: () => "/value-added-services/my-services",
+      extraOptions: { isCustomer: true },
+      providesTags: ["CustomerActiveService"],
+      transformErrorResponse: (response) => handleApiError(response),
+    }),
 
     calculateVASPrice: builder.mutation<
       PriceCalculationResponse,
@@ -154,13 +157,18 @@ getCustomerActiveServices: builder.query<CustomerActiveServicesResponse, void>({
           params.append("isActive", filters.isActive.toString());
 
         const queryString = params.toString();
-        return `/value-added-services/admin${queryString ? `?${queryString}` : ""}`;
+        return `/value-added-services/admin${
+          queryString ? `?${queryString}` : ""
+        }`;
       },
       providesTags: ["VAS"],
       transformErrorResponse: (response) => handleApiError(response),
     }),
 
-    getCustomersWithActiveVAS: builder.query<BackendPaginationResponse<any>, VASFilters | void>({
+    getCustomersWithActiveVAS: builder.query<
+      BackendPaginationResponse<any>,
+      VASFilters | void
+    >({
       query: (filters = {}) => {
         const params = new URLSearchParams();
         if (filters && typeof filters === "object") {
@@ -168,7 +176,9 @@ getCustomerActiveServices: builder.query<CustomerActiveServicesResponse, void>({
           if (filters.limit) params.append("limit", filters.limit.toString());
         }
         const queryString = params.toString();
-        return `/value-added-services/admin/customers${queryString ? `?${queryString}` : ""}`;
+        return `/value-added-services/admin/customers${
+          queryString ? `?${queryString}` : ""
+        }`;
       },
       providesTags: ["CustomerActiveService"],
       transformErrorResponse: (response) => handleApiError(response),
@@ -180,13 +190,19 @@ getCustomerActiveServices: builder.query<CustomerActiveServicesResponse, void>({
       transformErrorResponse: (response) => handleApiError(response),
     }),
 
-    updateVAS: builder.mutation<VASResponse, { id: string; data: UpdateVASRequest }>({
+    updateVAS: builder.mutation<
+      VASResponse,
+      { id: string; data: UpdateVASRequest }
+    >({
       query: ({ id, data }) => ({
         url: `/value-added-services/admin/${id}`,
         method: "PATCH",
         body: data,
       }),
-      invalidatesTags: (_result, _error, { id }) => [{ type: "VAS", id }, "VAS"],
+      invalidatesTags: (_result, _error, { id }) => [
+        { type: "VAS", id },
+        "VAS",
+      ],
       transformErrorResponse: (response) => handleApiError(response),
     }),
 
@@ -218,20 +234,19 @@ getCustomerActiveServices: builder.query<CustomerActiveServicesResponse, void>({
 export const {
   // Public/Mixed
   useGetServicesByTypeQuery,
-  useLazyGetServicesByTypeQuery,
 
   // Customer
   useGetCustomerActiveServicesQuery,
-  useLazyGetCustomerActiveServicesQuery,
+
   useCalculateVASPriceMutation,
 
   // Admin
   useGetAllVASQuery,
-  useLazyGetAllVASQuery,
+
   useGetVASByIdQuery,
-  useLazyGetVASByIdQuery,
+
   useGetCustomersWithActiveVASQuery,
-  useLazyGetCustomersWithActiveVASQuery,
+
   useCreateVASMutation,
   useUpdateVASMutation,
   useDeleteVASMutation,

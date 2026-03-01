@@ -9,14 +9,7 @@ import {
 } from "@/components/ui/card";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Building2,
-  MessageSquare,
-  Activity,
-  TrendingUp,
-  Clock,
-  Shield,
-} from "lucide-react";
+import { Building2, MessageSquare, Clock, Shield } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 // Redux
@@ -136,50 +129,6 @@ const AdminDashboard = () => {
                 </div>
               </div>
             </div>
-          </div>
-
-          {/* Quick Stats Row */}
-          <div className='grid grid-cols-2 md:grid-cols-4 gap-3 mt-8'>
-            {[
-              {
-                icon: Building2,
-                label: "Branches",
-                color: "text-blue-400",
-                bg: "bg-blue-500/10",
-                border: "border-blue-500/20",
-              },
-              {
-                icon: MessageSquare,
-                label: "Queries",
-                color: "text-amber-400",
-                bg: "bg-amber-500/10",
-                border: "border-amber-500/20",
-              },
-              {
-                icon: Activity,
-                label: "Active Services",
-                color: "text-emerald-400",
-                bg: "bg-emerald-500/10",
-                border: "border-emerald-500/20",
-              },
-              {
-                icon: TrendingUp,
-                label: "Growth",
-                color: "text-red-400",
-                bg: "bg-red-500/10",
-                border: "border-red-500/20",
-              },
-            ].map(({ icon: Icon, label, color, bg, border }) => (
-              <div
-                key={label}
-                className={`flex items-center gap-3 px-4 py-3 rounded-xl ${bg} border ${border} backdrop-blur-sm transition-all duration-200 hover:scale-[1.02]`}
-              >
-                <Icon className={`h-4 w-4 ${color}`} />
-                <span className='text-white/80 text-sm font-medium'>
-                  {label}
-                </span>
-              </div>
-            ))}
           </div>
         </div>
 

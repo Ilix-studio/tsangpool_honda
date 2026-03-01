@@ -94,7 +94,7 @@ const StatCard = ({
 
       {/* value */}
       <div>
-        <p className='text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1'>
+        <p className='text-xs font-semibold uppercase tracking-widest text-gray-800 mb-1'>
           {title}
         </p>
         {loading ? (
@@ -104,7 +104,7 @@ const StatCard = ({
             {typeof value === "number" ? value.toLocaleString() : value}
           </p>
         ) : (
-          <p className='text-sm text-gray-500 italic'>{description}</p>
+          <p className='text-sm text-gray-800 italic'>{description}</p>
         )}
         {value !== undefined && (
           <p className='text-xs text-gray-400 mt-1'>{description}</p>
@@ -222,7 +222,7 @@ const BranchQueries = () => {
   return (
     <div className='space-y-8'>
       {/* ── stat cards ── */}
-      <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4'>
+      <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4'>
         {stats.map((s, i) => (
           <StatCard key={s.title} {...s} index={i} />
         ))}
