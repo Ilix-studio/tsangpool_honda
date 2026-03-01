@@ -7,6 +7,7 @@ import { Loader2, Bike, Sparkles } from "lucide-react";
 import { TokenDebugger } from "@/lib/TokenDebugger";
 import CustomerProfileInto from "../CustomerProfileInto";
 import { motion } from "framer-motion";
+import CustomerActiveServices from "./CustomerActiveServices";
 
 export default function CustomerMainDash() {
   const navigate = useNavigate();
@@ -97,6 +98,13 @@ export default function CustomerMainDash() {
           transition={{ delay: 0.18, duration: 0.4 }}
         >
           <CustomerBikeInfo />
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.26, duration: 0.4 }}
+        >
+          <CustomerActiveServices />
         </motion.div>
 
         {/* ── Dev token debugger ── */}

@@ -301,14 +301,13 @@ export const getCustomerActiveServices = asyncHandler(
     const customerId = req.customer?._id;
 
     const vehicles = await CustomerVehicleModel.find({
-      customerPhoneNumber: customerId,
+      customer: customerId,
       isActive: true,
     })
-      .populate("customerPhoneNumber", "phoneNumber")
-      .populate(
-        "activeValueAddedServices.serviceId",
-        "serviceName serviceType description"
-      );
+    .populate(
+      "activeValueAddedServices.serviceId",
+      "serviceName serviceType description"
+    );
 
     // Use the activeValueAddedServices array from the vehicle model
     const activeServices = vehicles.map((vehicle: ICustomerVehicle) => ({
