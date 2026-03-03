@@ -1,17 +1,21 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import {
-  Users,
-  AlertTriangle,
-  Package,
-  ArrowUpRight,
-  ChevronRight,
-} from "lucide-react";
-import { Link } from "react-router-dom";
+import { Plus, ArrowUpRight, ChevronRight } from "lucide-react";
 
-interface StatCardProps {
+import { Link } from "react-router-dom"; // ─── helpers ────────────────────────────────────────────────────────────────
+export const formatTimeAgo = (dateString: string) => {
+  const diff = Date.now() - new Date(dateString).getTime();
+  const h = Math.floor(diff / 36e5);
+  const d = Math.floor(h / 24);
+  if (d > 0) return `${d}d ago`;
+  if (h > 0) return `${h}h ago`;
+  return "Just now";
+};
+
+// ─── stat card ──────────────────────────────────────────────────────────────
+export interface StatCardProps {
   title: string;
-  value: string | number;
+  value?: number | string;
   icon: React.ElementType;
   loading?: boolean;
   description: string;
@@ -20,7 +24,17 @@ interface StatCardProps {
   index: number;
 }
 
-const StatCard = ({
+// ─── visitor metric tile ─────────────────────────────────────────────────────
+export interface MetricTileProps {
+  label: string;
+  value: string | number;
+  bg: string;
+  text: string;
+  sub: string;
+  index: number;
+}
+
+export const StatCard = ({
   title,
   value,
   icon: Icon,
@@ -73,17 +87,21 @@ const StatCard = ({
 
       {/* value */}
       <div>
-        <p className='text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1'>
+        <p className='text-xs font-semibold uppercase tracking-widest text-gray-800 mb-1'>
           {title}
         </p>
         {loading ? (
           <div className='h-9 w-20 bg-gray-100 animate-pulse rounded-lg' />
-        ) : (
+        ) : value !== undefined ? (
           <p className='text-4xl font-black text-gray-900 leading-none tabular-nums'>
             {typeof value === "number" ? value.toLocaleString() : value}
           </p>
+        ) : (
+          <p className='text-sm text-gray-800 italic'>{description}</p>
         )}
-        <p className='text-xs text-gray-400 mt-1'>{description}</p>
+        {value !== undefined && (
+          <p className='text-xs text-gray-400 mt-1'>{description}</p>
+        )}
       </div>
 
       {/* action */}
@@ -93,51 +111,33 @@ const StatCard = ({
           size='sm'
           className='w-full justify-between px-3 h-9 rounded-xl bg-gray-50 hover:bg-gray-100 text-gray-600 hover:text-gray-900 transition-all group/btn'
         >
-          <span className='text-xs font-medium'>{action.label}</span>
+          <span className='flex items-center gap-1.5 text-xs font-medium'>
+            <Plus className='w-3 h-3' />
+            {action.label}
+          </span>
           <ChevronRight className='w-3 h-3 opacity-0 group-hover/btn:opacity-100 transition-opacity' />
         </Button>
       </Link>
     </div>
   </motion.div>
 );
-
-const stats: Omit<StatCardProps, "index">[] = [
-  {
-    title: "Web Service Customers",
-    value: "2,000",
-    icon: Users,
-    loading: false,
-    description: "Total registered users",
-    accent: "#f97316",
-    action: { label: "View Report", href: "/admin/reports" },
-  },
-
-  {
-    title: "Accident Reports",
-    value: 10,
-    icon: AlertTriangle,
-    loading: false,
-    description: "Pending review",
-    accent: "#ef4444",
-    action: { label: "View Reports", href: "/admin/reports" },
-  },
-  {
-    title: "Parts Ordered",
-    value: 33,
-    icon: Package,
-    loading: false,
-    description: "Orders in pipeline",
-    accent: "#8b5cf6",
-    action: { label: "View Orders", href: "/admin/reports" },
-  },
-];
-
-const CustomerQueries = () => (
-  <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8'>
-    {stats.map((stat, i) => (
-      <StatCard key={stat.title} {...stat} index={i} />
-    ))}
-  </div>
+export const MetricTile = ({
+  label,
+  value,
+  bg,
+  text,
+  sub,
+  index,
+}: MetricTileProps) => (
+  <motion.div
+    initial={{ opacity: 0, scale: 0.95 }}
+    animate={{ opacity: 1, scale: 1 }}
+    transition={{ delay: 0.35 + index * 0.07, duration: 0.4 }}
+    className={`relative overflow-hidden rounded-2xl p-5 ${bg} flex flex-col justify-between min-h-[110px]`}
+  >
+    <p className={`text-xs font-semibold uppercase tracking-widest ${sub}`}>
+      {label}
+    </p>
+    <p className={`text-3xl font-black tabular-nums ${text}`}>{value}</p>
+  </motion.div>
 );
-
-export default CustomerQueries;
