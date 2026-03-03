@@ -17,42 +17,40 @@ import { protectCustomer } from "../../middleware/customerMiddleware";
 
 const router = express.Router();
 
-// Customer routes (authenticated customers only)
+// Customer routes
 router.post("/", protectCustomer, createServiceBooking);
 router.get("/my-bookings", protectCustomer, getCustomerBookings);
 router.get("/my-stats", protectCustomer, getCustomerServiceStats);
 router.get("/availability", protectCustomer, checkTimeSlotAvailability);
-router.get("/:id", protectCustomer, getServiceBookingById);
-router.delete("/:id/cancel", protectCustomer, cancelServiceBooking);
 
-// Admin routes - Protected routes for Super Admin and Branch Admin
+// Admin routes — MUST be before /:id
 router.get(
   "/admin/all",
   protect,
   authorize("Super-Admin", "Branch-Admin"),
   getServiceBookings
 );
-
-router.patch(
-  "/:id/status",
-  protect,
-  authorize("Super-Admin", "Branch-Admin"),
-  updateBookingStatus
-);
-
 router.get(
   "/admin/stats",
   protect,
   authorize("Super-Admin", "Branch-Admin"),
   getBookingStats
 );
-
-// Branch-specific routes
+router.patch(
+  "/:id/status",
+  protect,
+  authorize("Super-Admin", "Branch-Admin"),
+  updateBookingStatus
+);
 router.get(
   "/branch/:branchId/upcoming",
   protect,
   authorize("Super-Admin", "Branch-Admin"),
   getBranchUpcomingAppointments
 );
+
+// Parameterized routes — LAST
+router.get("/:id", protectCustomer, getServiceBookingById);
+router.delete("/:id/cancel", protectCustomer, cancelServiceBooking);
 
 export default router;

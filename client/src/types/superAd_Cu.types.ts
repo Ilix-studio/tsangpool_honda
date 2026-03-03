@@ -319,7 +319,10 @@ export interface IPopulatedVAS {
 }
 
 export interface IPopulatedCustomerVehicle
-  extends Omit<ICustomerVehicle, "stockConcept" | "activeValueAddedServices"> {
+  extends Omit<
+    ICustomerVehicle,
+    "stockConcept" | "activeValueAddedServices" | "stockConceptcsv"
+  > {
   stockConcept?: IPopulatedStockConcept;
   activeValueAddedServices: IPopulatedVAS[];
 }

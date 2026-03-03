@@ -15,7 +15,6 @@ import { ServiceFormValues, serviceFormSchema } from "@/lib/form-schema";
 import { VehicleInformation } from "./formSteps/VehicleInformation";
 import { ServiceSelection } from "./formSteps/ServiceSelection";
 import { ScheduleService } from "./formSteps/ScheduleService";
-import { AdditionalInformation } from "./formSteps/AdditionalInformation";
 import { SuccessConfirmation } from "./SuccessConfirmation";
 import { StepIndicator } from "./StepIndicator";
 import { FormNavigation } from "./FormNavigation";
@@ -52,7 +51,7 @@ export const BookServiceForm: React.FC = () => {
   const [createServiceBooking] = useCreateServiceBookingMutation();
   const { refetch: refetchStats } = useGetMyServiceStatsQuery();
 
-  const totalSteps = 4;
+  const totalSteps = 3;
 
   const form = useForm<ServiceFormValues>({
     resolver: zodResolver(serviceFormSchema),
@@ -64,7 +63,6 @@ export const BookServiceForm: React.FC = () => {
         ? new Date(currentBooking.appointmentDate)
         : undefined,
       time: currentBooking?.appointmentTime,
-      termsAccepted: currentBooking?.termsAccepted,
     },
   });
 
@@ -79,7 +77,6 @@ export const BookServiceForm: React.FC = () => {
           appointmentDate: value.date?.toISOString(),
           appointmentTime: value.time,
           location: value.serviceLocation ? "branch" : undefined,
-          termsAccepted: value.termsAccepted,
         })
       );
     });
@@ -98,9 +95,6 @@ export const BookServiceForm: React.FC = () => {
         break;
       case 3:
         fieldsToValidate = ["serviceLocation", "date", "time"];
-        break;
-      case 4:
-        fieldsToValidate = ["termsAccepted"];
         break;
     }
 
@@ -130,10 +124,6 @@ export const BookServiceForm: React.FC = () => {
         appointmentDate: data.date!.toISOString().split("T")[0],
         appointmentTime: data.time!,
         location: "branch" as const,
-        specialRequests: data.issues,
-        isDropOff: data.dropOff,
-        willWaitOnsite: data.waitOnsite,
-        termsAccepted: true,
       };
 
       const result = await createServiceBooking(bookingData).unwrap();
@@ -171,8 +161,7 @@ export const BookServiceForm: React.FC = () => {
         return <ServiceSelection form={form} />;
       case 3:
         return <ScheduleService form={form} />;
-      case 4:
-        return <AdditionalInformation form={form} />;
+
       default:
         return null;
     }

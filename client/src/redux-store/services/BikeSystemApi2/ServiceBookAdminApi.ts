@@ -47,7 +47,12 @@ export const serviceBookingAdminApi = apiSlice.injectEndpoints({
         method: "PATCH",
         body: data,
       }),
-      invalidatesTags: ["AdminBooking", "AdminStats"],
+      invalidatesTags: (_result, _error, { id }) => [
+        "AdminBooking",
+        "AdminStats",
+        "ServiceBooking", // add this
+        { type: "ServiceBooking", id }, // add this
+      ],
     }),
 
     getBookingStats: builder.query<
@@ -80,7 +85,7 @@ export const serviceBookingAdminApi = apiSlice.injectEndpoints({
     }),
   }),
 });
-1
+1;
 export const {
   useGetAllBookingsQuery,
   useUpdateBookingStatusMutation,

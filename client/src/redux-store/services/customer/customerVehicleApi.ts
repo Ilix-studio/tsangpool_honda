@@ -1,7 +1,11 @@
-import { PopulatedCustomerVehicleListResponse, PopulatedCustomerVehicleResponse, ServiceHistoryResponse, VehiclesByPhoneResponse } from "@/types/superAd_Cu.types";
+import {
+  PopulatedCustomerVehicleListResponse,
+  PopulatedCustomerVehicleResponse,
+  ServiceHistoryResponse,
+  VehiclesByPhoneResponse,
+} from "@/types/superAd_Cu.types";
 import { apiSlice } from "../apiSlice";
 import { handleApiError } from "@/lib/apiConfig";
-
 
 export const customerVehicleApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -67,5 +71,5 @@ export const {
   useGetCustomerVehicleByIdQuery,
   useGetVehicleServiceHistoryQuery,
   useCheckVehicleEligibilityQuery,
-  useGetVehiclesByPhoneQuery,   
-} = customerVehicleApi; 
+  useGetVehiclesByPhoneQuery,
+} = customerVehicleApi;
