@@ -15,9 +15,6 @@ export interface ServiceFormState {
     // Vehicle Information
     bikeModel: string;
     year: string;
-    vin: string;
-    mileage: string;
-    registrationNumber: string;
 
     // Service Selection
     serviceType: string;
@@ -33,43 +30,6 @@ export interface ServiceFormState {
     lastName: string;
     email: string;
     phone: string;
-
-    // Additional Information
-    issues: string;
-    dropOff: boolean;
-    waitOnsite: boolean;
-    termsAccepted: boolean;
-  };
-  errors: Record<string, string>;
-}
-
-// Test ride form state
-export interface TestRideFormState {
-  currentStep: number;
-  totalSteps: number;
-  isSubmitting: boolean;
-  isSubmitted: boolean;
-  formData: {
-    // Personal Information
-    firstName: string;
-    lastName: string;
-    email: string;
-    phone: string;
-
-    // Test Ride Details
-    bikeModel: string;
-    dealership: string;
-    date: string | null;
-    time: string;
-
-    // License Information
-    licenseType: string;
-    licenseNumber: string;
-    ridingExperience: string;
-
-    // Additional Information
-    additionalInfo: string;
-    termsAccepted: boolean;
   };
   errors: Record<string, string>;
 }

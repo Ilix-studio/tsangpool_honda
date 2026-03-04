@@ -70,7 +70,7 @@ export const getCustomerVehicleInfo = asyncHandler(
 export const createServiceBooking = asyncHandler(
   async (req: Request, res: Response) => {
     const {
-      modelName, // CustomerVehicle reference
+      vehicle,
       serviceType, // Single service only
       branch, // Branch reference
       appointmentDate,
@@ -85,7 +85,7 @@ export const createServiceBooking = asyncHandler(
 
     // Validate required fields
     if (
-      !modelName ||
+      !vehicle ||
       !serviceType ||
       !branch ||
       !appointmentDate ||
@@ -122,13 +122,13 @@ export const createServiceBooking = asyncHandler(
     }
 
     // Validate vehicle belongs to customer
-    if (!mongoose.Types.ObjectId.isValid(modelName)) {
+    if (!mongoose.Types.ObjectId.isValid(vehicle)) {
       res.status(400);
       throw new Error("Invalid vehicle ID");
     }
 
     const customerVehicle = await CustomerVehicleModel.findOne({
-      _id: modelName,
+      _id: vehicle,
       customer: req.customer._id,
       isActive: true,
     }).populate("stockConcept");
@@ -184,7 +184,7 @@ export const createServiceBooking = asyncHandler(
     // Create the service booking
     const serviceBooking = await ServiceBookingModel.create({
       customer: req.customer._id,
-      modelName,
+      vehicle,
       serviceType,
       usedServices: [serviceType], // Track this service as used
       branch,
