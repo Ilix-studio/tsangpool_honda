@@ -75,8 +75,6 @@ export interface TestRideFormState {
 }
 
 export interface FormState {
-  serviceBooking: ServiceFormState;
-  testRide: TestRideFormState;
   contactForm: {
     isSubmitting: boolean;
     isSubmitted: boolean;
@@ -92,55 +90,6 @@ export interface FormState {
 }
 
 const initialState: FormState = {
-  serviceBooking: {
-    currentStep: 1,
-    totalSteps: 6,
-    isSubmitting: false,
-    isSubmitted: false,
-    formData: {
-      bikeModel: "",
-      year: "",
-      vin: "",
-      mileage: "",
-      registrationNumber: "",
-      serviceType: "",
-      additionalServices: [],
-      serviceLocation: "",
-      date: null,
-      time: "",
-      firstName: "",
-      lastName: "",
-      email: "",
-      phone: "",
-      issues: "",
-      dropOff: false,
-      waitOnsite: false,
-      termsAccepted: false,
-    },
-    errors: {},
-  },
-  testRide: {
-    currentStep: 1,
-    totalSteps: 5,
-    isSubmitting: false,
-    isSubmitted: false,
-    formData: {
-      firstName: "",
-      lastName: "",
-      email: "",
-      phone: "",
-      bikeModel: "",
-      dealership: "",
-      date: null,
-      time: "",
-      licenseType: "",
-      licenseNumber: "",
-      ridingExperience: "",
-      additionalInfo: "",
-      termsAccepted: false,
-    },
-    errors: {},
-  },
   contactForm: {
     isSubmitting: false,
     isSubmitted: false,
@@ -159,64 +108,6 @@ const formSlice = createSlice({
   name: "form",
   initialState,
   reducers: {
-    // Service Booking Form Actions
-    setServiceBookingStep: (state, action: PayloadAction<number>) => {
-      state.serviceBooking.currentStep = action.payload;
-    },
-    updateServiceBookingData: (
-      state,
-      action: PayloadAction<Partial<ServiceFormState["formData"]>>
-    ) => {
-      state.serviceBooking.formData = {
-        ...state.serviceBooking.formData,
-        ...action.payload,
-      };
-    },
-    setServiceBookingErrors: (
-      state,
-      action: PayloadAction<Record<string, string>>
-    ) => {
-      state.serviceBooking.errors = action.payload;
-    },
-    setServiceBookingSubmitting: (state, action: PayloadAction<boolean>) => {
-      state.serviceBooking.isSubmitting = action.payload;
-    },
-    setServiceBookingSubmitted: (state, action: PayloadAction<boolean>) => {
-      state.serviceBooking.isSubmitted = action.payload;
-    },
-    resetServiceBookingForm: (state) => {
-      state.serviceBooking = initialState.serviceBooking;
-    },
-
-    // Test Ride Form Actions
-    setTestRideStep: (state, action: PayloadAction<number>) => {
-      state.testRide.currentStep = action.payload;
-    },
-    updateTestRideData: (
-      state,
-      action: PayloadAction<Partial<TestRideFormState["formData"]>>
-    ) => {
-      state.testRide.formData = {
-        ...state.testRide.formData,
-        ...action.payload,
-      };
-    },
-    setTestRideErrors: (
-      state,
-      action: PayloadAction<Record<string, string>>
-    ) => {
-      state.testRide.errors = action.payload;
-    },
-    setTestRideSubmitting: (state, action: PayloadAction<boolean>) => {
-      state.testRide.isSubmitting = action.payload;
-    },
-    setTestRideSubmitted: (state, action: PayloadAction<boolean>) => {
-      state.testRide.isSubmitted = action.payload;
-    },
-    resetTestRideForm: (state) => {
-      state.testRide = initialState.testRide;
-    },
-
     // Contact Form Actions
     updateContactFormData: (
       state,
@@ -252,20 +143,6 @@ const formSlice = createSlice({
 
 export const {
   // Service Booking
-  setServiceBookingStep,
-  updateServiceBookingData,
-  setServiceBookingErrors,
-  setServiceBookingSubmitting,
-  setServiceBookingSubmitted,
-  resetServiceBookingForm,
-
-  // Test Ride
-  setTestRideStep,
-  updateTestRideData,
-  setTestRideErrors,
-  setTestRideSubmitting,
-  setTestRideSubmitted,
-  resetTestRideForm,
 
   // Contact Form
   updateContactFormData,
@@ -279,32 +156,6 @@ export const {
 } = formSlice.actions;
 
 // Selectors
-export const selectServiceBookingForm = (state: RootState) =>
-  state.form.serviceBooking;
-export const selectTestRideForm = (state: RootState) => state.form.testRide;
-export const selectContactForm = (state: RootState) => state.form.contactForm;
-
-export const selectServiceBookingStep = (state: RootState) =>
-  state.form.serviceBooking.currentStep;
-export const selectServiceBookingData = (state: RootState) =>
-  state.form.serviceBooking.formData;
-export const selectServiceBookingErrors = (state: RootState) =>
-  state.form.serviceBooking.errors;
-export const selectServiceBookingSubmitting = (state: RootState) =>
-  state.form.serviceBooking.isSubmitting;
-export const selectServiceBookingSubmitted = (state: RootState) =>
-  state.form.serviceBooking.isSubmitted;
-
-export const selectTestRideStep = (state: RootState) =>
-  state.form.testRide.currentStep;
-export const selectTestRideData = (state: RootState) =>
-  state.form.testRide.formData;
-export const selectTestRideErrors = (state: RootState) =>
-  state.form.testRide.errors;
-export const selectTestRideSubmitting = (state: RootState) =>
-  state.form.testRide.isSubmitting;
-export const selectTestRideSubmitted = (state: RootState) =>
-  state.form.testRide.isSubmitted;
 
 export const selectContactFormData = (state: RootState) =>
   state.form.contactForm.formData;

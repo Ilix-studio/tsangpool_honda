@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { AlertTriangle, CalendarIcon, Clock } from "lucide-react";
+import { AlertTriangle } from "lucide-react";
 import { UseFormReturn } from "react-hook-form";
 import { useState, useEffect } from "react";
 import { Label } from "@/components/ui/label";
@@ -9,18 +9,12 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { cn } from "../../../lib/utils";
 import { ServiceFormValues } from "../../../lib/form-schema";
 import { formatDate } from "../../../lib/dateUtils";
 import { useGetBranchesQuery } from "@/redux-store/services/branchApi";
 import { useLazyCheckAvailabilityQuery } from "@/redux-store/services/customer/ServiceBookCustomerApi";
+import { CalendarIcon } from "lucide-react";
 
 interface ServiceLocation {
   _id: string;
@@ -44,14 +38,11 @@ export function ScheduleService({ form }: ScheduleServiceProps) {
   const [availableSlots, setAvailableSlots] = useState<string[]>([]);
   const [checkingAvailability, setCheckingAvailability] = useState(false);
 
-  // Get service locations from API
   const { data: branchesResponse, isLoading } = useGetBranchesQuery();
   const serviceLocations: ServiceLocation[] = branchesResponse?.data || [];
 
-  // Lazy query for checking availability
   const [checkAvailability] = useLazyCheckAvailabilityQuery();
 
-  // Check availability when branch and date are selected
   useEffect(() => {
     if (watchedValues.serviceLocation && selectedDate) {
       setCheckingAvailability(true);
@@ -60,21 +51,14 @@ export function ScheduleService({ form }: ScheduleServiceProps) {
         date: selectedDate.toISOString().split("T")[0],
       })
         .unwrap()
-        .then((response) => {
-          setAvailableSlots(response.data.availableSlots);
-        })
-        .catch(() => {
-          setAvailableSlots([]);
-        })
-        .finally(() => {
-          setCheckingAvailability(false);
-        });
+        .then((response) => setAvailableSlots(response.data.availableSlots))
+        .catch(() => setAvailableSlots([]))
+        .finally(() => setCheckingAvailability(false));
     }
   }, [watchedValues.serviceLocation, selectedDate, checkAvailability]);
 
   const selectedLocation = serviceLocations.find(
-    (location: ServiceLocation) =>
-      location._id === watchedValues.serviceLocation
+    (location) => location._id === watchedValues.serviceLocation
   );
 
   const fadeInUp = {
@@ -85,22 +69,16 @@ export function ScheduleService({ form }: ScheduleServiceProps) {
   const handleDateSelect = (date: Date) => {
     setSelectedDate(date);
     setValue("date", date);
-    setValue("time", ""); // Clear selected time when date changes
+    setValue("time", "");
   };
 
-  // Generate next 30 days for date selection
   const getAvailableDates = () => {
     const dates = [];
     const today = new Date();
-
     for (let i = 1; i <= 30; i++) {
       const date = new Date(today);
       date.setDate(today.getDate() + i);
-
-      // Skip Sundays (assuming service center is closed)
-      if (date.getDay() !== 0) {
-        dates.push(date);
-      }
+      if (date.getDay() !== 0) dates.push(date);
     }
     return dates;
   };
@@ -118,33 +96,30 @@ export function ScheduleService({ form }: ScheduleServiceProps) {
     >
       <h3 className='text-lg font-medium'>Schedule Your Service</h3>
 
+      {/* Service Location */}
       <div className='space-y-2'>
         <Label htmlFor='serviceLocation'>Service Location</Label>
-        <Select
-          value={watchedValues.serviceLocation}
-          onValueChange={(value) => {
-            setValue("serviceLocation", value);
-            setValue("time", ""); // Clear time when location changes
-          }}
+        <select
+          id='serviceLocation'
+          value={watchedValues.serviceLocation ?? ""}
           disabled={isLoading}
+          onChange={(e) => {
+            setValue("serviceLocation", e.target.value);
+            setValue("time", "");
+          }}
+          className={`w-full h-10 px-3 rounded-md border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${
+            errors.serviceLocation ? "border-red-500" : "border-input"
+          }`}
         >
-          <SelectTrigger
-            className={errors.serviceLocation ? "border-red-500" : ""}
-          >
-            <SelectValue
-              placeholder={
-                isLoading ? "Loading locations..." : "Select a service center"
-              }
-            />
-          </SelectTrigger>
-          <SelectContent>
-            {serviceLocations.map((location: ServiceLocation) => (
-              <SelectItem key={location._id} value={location._id}>
-                {location.branchName}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+          <option value='' disabled>
+            {isLoading ? "Loading locations..." : "Select a service center"}
+          </option>
+          {serviceLocations.map((location) => (
+            <option key={location._id} value={location._id}>
+              {location.branchName}
+            </option>
+          ))}
+        </select>
         {errors.serviceLocation && (
           <p className='text-red-500 text-sm'>
             {errors.serviceLocation.message}
@@ -163,6 +138,7 @@ export function ScheduleService({ form }: ScheduleServiceProps) {
         </div>
       )}
 
+      {/* Date Picker */}
       <div className='space-y-2'>
         <Label>Preferred Date</Label>
         <Popover>
@@ -212,46 +188,43 @@ export function ScheduleService({ form }: ScheduleServiceProps) {
         )}
       </div>
 
+      {/* Time Slot */}
       <div className='space-y-2'>
-        <Label className='flex items-center gap-2'>
+        <Label htmlFor='time' className='flex items-center gap-2'>
           Preferred Time
           {checkingAvailability && (
-            <div className='animate-spin h-4 w-4 border-2 border-red-600 rounded-full border-t-transparent'></div>
+            <div className='animate-spin h-4 w-4 border-2 border-red-600 rounded-full border-t-transparent' />
           )}
         </Label>
-        <Select
-          value={watchedValues.time}
-          onValueChange={(value) => setValue("time", value)}
+        <select
+          id='time'
+          value={watchedValues.time ?? ""}
           disabled={!selectedDate || checkingAvailability}
+          onChange={(e) => setValue("time", e.target.value)}
+          className={`w-full h-10 px-3 rounded-md border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${
+            errors.time ? "border-red-500" : "border-input"
+          }`}
         >
-          <SelectTrigger className={errors.time ? "border-red-500" : ""}>
-            <SelectValue
-              placeholder={
-                !selectedDate
-                  ? "Select a date first"
-                  : checkingAvailability
-                  ? "Checking availability..."
-                  : "Select a time slot"
-              }
-            />
-          </SelectTrigger>
-          <SelectContent>
-            {availableSlots.length === 0 && !checkingAvailability ? (
-              <SelectItem value='none' disabled>
+          <option value='' disabled>
+            {!selectedDate
+              ? "Select a date first"
+              : checkingAvailability
+              ? "Checking availability..."
+              : "Select a time slot"}
+          </option>
+          {availableSlots.map((time) => (
+            <option key={time} value={time}>
+              {time}
+            </option>
+          ))}
+          {!checkingAvailability &&
+            selectedDate &&
+            availableSlots.length === 0 && (
+              <option value='' disabled>
                 No time slots available
-              </SelectItem>
-            ) : (
-              availableSlots.map((time: string) => (
-                <SelectItem key={time} value={time}>
-                  <div className='flex items-center gap-2'>
-                    <Clock className='h-4 w-4' />
-                    {time}
-                  </div>
-                </SelectItem>
-              ))
+              </option>
             )}
-          </SelectContent>
-        </Select>
+        </select>
         {errors.time && (
           <p className='text-red-500 text-sm'>{errors.time.message}</p>
         )}

@@ -3,6 +3,7 @@ import { UseFormReturn } from "react-hook-form";
 import { Label } from "@/components/ui/label";
 import { ServiceFormValues } from "../../../lib/form-schema";
 import { useGetMyVehicleInfoQuery } from "@/redux-store/services/customer/ServiceBookCustomerApi";
+import { useEffect } from "react";
 
 interface VehicleInformationProps {
   form: UseFormReturn<ServiceFormValues>;
@@ -19,6 +20,12 @@ export const VehicleInformation = ({ form }: VehicleInformationProps) => {
 
   const { data: vehicleResponse, isLoading } = useGetMyVehicleInfoQuery();
   const vehicle = vehicleResponse?.data ?? null;
+
+  useEffect(() => {
+    if (vehicle && !watchedValues.bikeModel) {
+      setValue("bikeModel", vehicle.vehicleId);
+    }
+  }, [vehicle, watchedValues.bikeModel, setValue]);
 
   const fadeInUp = {
     hidden: { opacity: 0, y: 20 },

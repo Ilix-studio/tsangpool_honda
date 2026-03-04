@@ -41,30 +41,21 @@ const persistConfig = {
   key: "root",
   version: 1,
   storage: idbStorage,
-  whitelist: [
-    "auth",
-    "customerAuth",
-    "comparison",
-    "ui",
-  ],
+  whitelist: ["auth", "customerAuth", "comparison", "ui"],
   blacklist: ["api"], // Don't persist API cache
 };
 
 const rootReducer = combineReducers({
   auth: authReducer,
-  //
   bikes: bikesReducer,
   bikeImages: bikeImageReducer,
-
   branch: branchReducer,
   comparison: comparisonReducer,
   ui: uiReducer,
   form: formReducer,
   getApproved: getApprovedReducer,
-  //update
   customerAuth: customerAuthReducer,
   setupProgress: persistedSetupProgressReducer,
-  //
   serviceBooking: serviceBookingReducer,
   [apiSlice.reducerPath]: apiSlice.reducer,
 });
@@ -79,9 +70,7 @@ export const store = configureStore({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    }).concat(
-      apiSlice.middleware
-    ),
+    }).concat(apiSlice.middleware),
 });
 
 // Create persistor for use with PersistGate
@@ -89,6 +78,5 @@ export const persistor = persistStore(store);
 
 // Setup listeners for automatic refetching
 setupListeners(store.dispatch);
-
-export type RootState = ReturnType<typeof store.getState>;
+export type RootState = ReturnType<typeof rootReducer>;
 export type AppDispatch = typeof store.dispatch;

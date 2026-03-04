@@ -10,7 +10,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-
 import { ServiceFormValues, serviceFormSchema } from "@/lib/form-schema";
 import { VehicleInformation } from "./formSteps/VehicleInformation";
 import { ServiceSelection } from "./formSteps/ServiceSelection";
@@ -18,8 +17,6 @@ import { ScheduleService } from "./formSteps/ScheduleService";
 import { SuccessConfirmation } from "./SuccessConfirmation";
 import { StepIndicator } from "./StepIndicator";
 import { FormNavigation } from "./FormNavigation";
-
-// Redux
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import { addNotification } from "../../redux-store/slices/uiSlice";
 import {
@@ -40,14 +37,12 @@ import {
 export const BookServiceForm: React.FC = () => {
   const dispatch = useAppDispatch();
 
-  // Direct state access instead of selectors
   const serviceBooking = useAppSelector((state: any) => state.serviceBooking);
   const currentBooking = serviceBooking.currentBooking;
   const currentStep = serviceBooking.currentStep;
   const isCreating = serviceBooking.isCreatingBooking;
   const success = serviceBooking.bookingSuccess;
 
-  // API hooks
   const [createServiceBooking] = useCreateServiceBookingMutation();
   const { refetch: refetchStats } = useGetMyServiceStatsQuery();
 
@@ -66,7 +61,6 @@ export const BookServiceForm: React.FC = () => {
     },
   });
 
-  // Sync form with Redux state
   useEffect(() => {
     const subscription = form.watch((value) => {
       dispatch(
@@ -117,37 +111,29 @@ export const BookServiceForm: React.FC = () => {
     dispatch(setCreatingBooking(true));
 
     try {
-      const bookingData = {
+      const result = await createServiceBooking({
         vehicle: data.bikeModel!,
         serviceType: data.serviceType!,
         branch: data.serviceLocation!,
         appointmentDate: data.date!.toISOString().split("T")[0],
         appointmentTime: data.time!,
         location: "branch" as const,
-      };
-
-      const result = await createServiceBooking(bookingData).unwrap();
+      }).unwrap();
 
       dispatch(setLastBookingId(result.data.bookingId));
       dispatch(setBookingSuccess(true));
       dispatch(
         addNotification({
           type: "success",
-          message: `Service booking created successfully! Booking ID: ${result.data.bookingId}`,
+          message: `Booking confirmed! ID: ${result.data.bookingId}`,
         })
       );
-
       refetchStats();
     } catch (error: any) {
       const errorMessage =
         error?.data?.message || "Failed to create service booking";
       dispatch(setBookingError(errorMessage));
-      dispatch(
-        addNotification({
-          type: "error",
-          message: errorMessage,
-        })
-      );
+      dispatch(addNotification({ type: "error", message: errorMessage }));
     } finally {
       dispatch(setCreatingBooking(false));
     }
@@ -161,7 +147,6 @@ export const BookServiceForm: React.FC = () => {
         return <ServiceSelection form={form} />;
       case 3:
         return <ScheduleService form={form} />;
-
       default:
         return null;
     }

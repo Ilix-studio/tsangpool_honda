@@ -1,10 +1,11 @@
 import React, { useEffect } from "react";
 
 import { BookServiceForm } from "./BookServiceForm";
-import { useAppSelector } from "@/hooks/redux";
+
 import { Loader2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { selectCustomerAuth } from "@/redux-store/slices/customer/customerAuthSlice";
+import { useAppSelector } from "@/hooks/redux";
 
 const BookServicePage: React.FC = () => {
   const navigate = useNavigate();

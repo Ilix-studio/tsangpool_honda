@@ -166,9 +166,6 @@ export const createServiceBooking = asyncHandler(
       throw new Error("Invalid time format. Use HH:MM format");
     }
 
-    const appointmentMinutes =
-      parseInt(timeMatch[1]) * 60 + parseInt(timeMatch[2]);
-
     // Check availability with 20-minute buffer
     const isAvailable = await ServiceBookingModel.checkAvailabilityWithBuffer(
       branch,

@@ -18,13 +18,44 @@ export const FormNavigation = ({
   handleSubmit,
   isSubmitting,
 }: FormNavigationProps) => {
+  const isLastStep = step === totalSteps;
+
+  const handleSubmitWithDebug = () => {
+    console.group("[FormNavigation] Book Service clicked");
+    console.log("step:", step);
+    console.log("totalSteps:", totalSteps);
+    console.log("isLastStep:", isLastStep);
+    console.log("isSubmitting:", isSubmitting);
+    console.groupEnd();
+    handleSubmit();
+  };
+
+  const handleNextWithDebug = () => {
+    console.group("[FormNavigation] Next clicked");
+    console.log("step:", step);
+    console.log("totalSteps:", totalSteps);
+    console.groupEnd();
+    handleNext();
+  };
+
+  const handleBackWithDebug = () => {
+    console.group("[FormNavigation] Back clicked");
+    console.log("step:", step);
+    console.groupEnd();
+    handleBack();
+  };
+
+  console.log(
+    `[FormNavigation] render — step: ${step}/${totalSteps} | isLastStep: ${isLastStep} | isSubmitting: ${isSubmitting}`
+  );
+
   return (
     <div className='flex justify-between'>
       {step > 1 ? (
         <Button
           type='button'
           variant='outline'
-          onClick={handleBack}
+          onClick={handleBackWithDebug}
           disabled={isSubmitting}
         >
           <ChevronLeft className='mr-2 h-4 w-4' /> Back
@@ -33,10 +64,10 @@ export const FormNavigation = ({
         <div />
       )}
 
-      {step < totalSteps ? (
+      {!isLastStep ? (
         <Button
           type='button'
-          onClick={handleNext}
+          onClick={handleNextWithDebug}
           className='bg-red-600 hover:bg-red-700'
         >
           Next <ChevronRight className='ml-2 h-4 w-4' />
@@ -44,7 +75,7 @@ export const FormNavigation = ({
       ) : (
         <Button
           type='button'
-          onClick={handleSubmit}
+          onClick={handleSubmitWithDebug}
           className='bg-red-600 hover:bg-red-700'
           disabled={isSubmitting}
         >
