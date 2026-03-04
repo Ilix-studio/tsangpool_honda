@@ -311,12 +311,13 @@ export const routeConfig: Record<
   },
   "/customer/services": {
     title: "My Services",
-    subtitle: "Manage your service bookings",
+    subtitle: "",
     showBack: true,
     backTo: "/customer/dashboard",
     menuItems: [
       { label: "Book Service", href: "/customer/services" },
       { label: "Service History", href: "/customer/service-history" },
+      { label: "Customer Support", href: "/customer/support" },
     ],
   },
   "/customer/book-service": {
@@ -344,6 +345,12 @@ export const routeConfig: Record<
   "/customer/profile-info": {
     title: "My Profile",
     subtitle: "Manage your account information",
+    showBack: true,
+    backTo: "/customer/dashboard",
+  },
+  "/customer/support": {
+    title: "Customer Support",
+    subtitle: "Support System",
     showBack: true,
     backTo: "/customer/dashboard",
   },

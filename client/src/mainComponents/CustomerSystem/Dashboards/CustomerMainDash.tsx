@@ -4,7 +4,7 @@ import { CustomerBikeInfo } from "../CustomerBikeInfo";
 import { useAppSelector } from "@/hooks/redux";
 import { selectCustomerAuth } from "@/redux-store/slices/customer/customerAuthSlice";
 import { Loader2, Bike, Sparkles } from "lucide-react";
-import { TokenDebugger } from "@/lib/TokenDebugger";
+// import { TokenDebugger } from "@/lib/TokenDebugger";
 import CustomerProfileInto from "../CustomerProfileInto";
 import { motion } from "framer-motion";
 import CustomerActiveServices from "./CustomerActiveServices";
@@ -110,7 +110,7 @@ export default function CustomerMainDash() {
         {/* ── Dev token debugger ── */}
         {process.env.NODE_ENV === "development" && (
           <div className='opacity-50 hover:opacity-100 transition-opacity'>
-            <TokenDebugger />
+            {/* <TokenDebugger /> */}
           </div>
         )}
       </main>

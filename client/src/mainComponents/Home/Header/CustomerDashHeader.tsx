@@ -23,6 +23,8 @@ import { useAuthForCustomer } from "@/hooks/useAuthforCustomer";
 import { logout } from "@/redux-store/slices/customer/customerAuthSlice";
 import { addNotification } from "@/redux-store/slices/uiSlice";
 import { routeConfig } from "@/config/routeConfig";
+import { useGetCustomerProfileQuery } from "@/redux-store/services/customer/customerApi";
+import { ApiResponse } from "@/mainComponents/CustomerSystem/CustomerProfileInto";
 
 const NAV_LINKS = [
   { label: "Dashboard", to: "/customer/dashboard" },
@@ -40,7 +42,8 @@ export function CustomerDashHeader() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-  const { isAuthenticated, customer, firebaseToken } = useAuthForCustomer();
+  const { isAuthenticated, firebaseToken } = useAuthForCustomer();
+  const { data } = useGetCustomerProfileQuery();
 
   const currentRoute = routeConfig[location.pathname] || {
     title: "Customer Portal",
@@ -69,17 +72,9 @@ export function CustomerDashHeader() {
     currentRoute.backTo ? navigate(currentRoute.backTo) : navigate(-1);
   };
 
-  const displayName =
-    customer?.firstName && customer?.lastName
-      ? `${customer.firstName} ${customer.lastName}`
-      : customer?.firstName || "Customer";
-
-  const initials = displayName
-    .split(" ")
-    .map((n: string) => n[0])
-    .join("")
-    .toUpperCase()
-    .slice(0, 2);
+  const apiResponse = data as unknown as ApiResponse;
+  const customerName = apiResponse.data;
+  const profile = customerName.profile;
 
   return (
     <header className='sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-100'>
@@ -171,18 +166,13 @@ export function CustomerDashHeader() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button className='flex items-center gap-2 px-2 py-1.5 rounded-xl hover:bg-gray-100 transition-colors group'>
-                  <div className='w-8 h-8 rounded-xl bg-gradient-to-br from-red-500 to-orange-400 flex items-center justify-center shrink-0'>
-                    <span className='text-white text-xs font-bold'>
-                      {initials}
-                    </span>
-                  </div>
+                  <div className='w-8 h-8 rounded-xl bg-white flex items-center justify-center shrink-0'></div>
                   <div className='hidden sm:block text-left leading-none'>
                     <p className='text-xs font-semibold text-gray-900 truncate max-w-[80px]'>
-                      {displayName.split(" ")[0]}
+                      {profile.firstName}
                     </p>
-                    <p className='text-[10px] text-gray-400'>Customer</p>
                   </div>
-                  <ChevronDown className='w-3.5 h-3.5 text-gray-400 hidden sm:block group-hover:text-gray-600 transition-colors' />
+                  <ChevronDown className='w-4 h-4 text-gray-700 hidden sm:block group-hover:text-gray-600 transition-colors' />
                 </button>
               </DropdownMenuTrigger>
 
@@ -193,12 +183,10 @@ export function CustomerDashHeader() {
               >
                 <DropdownMenuLabel className='px-3 py-2'>
                   <p className='text-sm font-bold text-gray-900'>
-                    {displayName}
+                    {/* {displayName} */}
                   </p>
                   <p className='text-xs text-gray-400 mt-0.5 truncate'>
-                    {customer?.email ||
-                      customer?.phoneNumber ||
-                      "customer@email.com"}
+                    {profile.firstName} {profile.lastName}
                   </p>
                 </DropdownMenuLabel>
 
