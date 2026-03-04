@@ -82,3 +82,11 @@ export interface ServiceStatsResponse {
     };
   };
 }
+// Response type for vehicle info endpoint
+export interface CustomerVehicleInfoResponse {
+  success: boolean;
+  data: {
+    vehicleId: string;
+    modelName: string;
+  };
+}

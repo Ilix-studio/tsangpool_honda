@@ -16,6 +16,53 @@ import { CustomerVehicleModel } from "../../models/BikeSystemModel2/CustomerVehi
 import { FREE_SERVICES, PAID_SERVICES } from "../../types/serviceBooking.types";
 
 /**
+ * @desc    Get customer's vehicle model name for service booking
+ * @route   GET /api/service-bookings/my-vehicle-info
+ * @access  Private (Customer)
+ */
+
+export const getCustomerVehicleInfo = asyncHandler(
+  async (req: Request, res: Response) => {
+    if (!req.customer) {
+      res.status(401);
+      throw new Error("Customer authentication required");
+    }
+
+    const vehicle = await CustomerVehicleModel.findOne({
+      customer: req.customer._id,
+      isActive: true,
+    });
+
+    if (!vehicle) {
+      res.status(404);
+      throw new Error("No active vehicle found for this customer");
+    }
+
+    // Populate from the correct model based on stockType
+    const populateModel =
+      vehicle.stockType === "StockConceptCSV"
+        ? "StockConceptCSV"
+        : "StockConcept";
+
+    await vehicle.populate({
+      path: "stockConcept",
+      model: populateModel,
+      select: "modelName category engineCC color variant yearOfManufacture",
+    });
+
+    const stock = vehicle.stockConcept as any;
+
+    res.status(200).json({
+      success: true,
+      data: {
+        vehicleId: vehicle._id,
+        modelName: stock?.modelName ?? "Unknown Model",
+      },
+    });
+  }
+);
+
+/**
  * @desc    Create a new service booking (authenticated customers only)
  * @route   POST /api/service-bookings
  * @access  Private (Customer)
