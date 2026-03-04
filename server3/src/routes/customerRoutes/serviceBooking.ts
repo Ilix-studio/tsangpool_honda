@@ -12,12 +12,14 @@ import {
   checkTimeSlotAvailability,
   getCustomerBookings,
   getCustomerServiceStats,
+  getCustomerVehicleInfo,
 } from "../../controllers/CustomerController/serviceBooking.controller";
 import { protectCustomer } from "../../middleware/customerMiddleware";
 
 const router = express.Router();
 
 // Customer routes
+router.get("/my-vehicle-info", protectCustomer, getCustomerVehicleInfo);
 router.post("/", protectCustomer, createServiceBooking);
 router.get("/my-bookings", protectCustomer, getCustomerBookings);
 router.get("/my-stats", protectCustomer, getCustomerServiceStats);

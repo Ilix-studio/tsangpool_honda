@@ -16,6 +16,53 @@ import { CustomerVehicleModel } from "../../models/BikeSystemModel2/CustomerVehi
 import { FREE_SERVICES, PAID_SERVICES } from "../../types/serviceBooking.types";
 
 /**
+ * @desc    Get customer's vehicle model name for service booking
+ * @route   GET /api/service-bookings/my-vehicle-info
+ * @access  Private (Customer)
+ */
+
+export const getCustomerVehicleInfo = asyncHandler(
+  async (req: Request, res: Response) => {
+    if (!req.customer) {
+      res.status(401);
+      throw new Error("Customer authentication required");
+    }
+
+    const vehicle = await CustomerVehicleModel.findOne({
+      customer: req.customer._id,
+      isActive: true,
+    });
+
+    if (!vehicle) {
+      res.status(404);
+      throw new Error("No active vehicle found for this customer");
+    }
+
+    // Populate from the correct model based on stockType
+    const populateModel =
+      vehicle.stockType === "StockConceptCSV"
+        ? "StockConceptCSV"
+        : "StockConcept";
+
+    await vehicle.populate({
+      path: "stockConcept",
+      model: populateModel,
+      select: "modelName category engineCC color variant yearOfManufacture",
+    });
+
+    const stock = vehicle.stockConcept as any;
+
+    res.status(200).json({
+      success: true,
+      data: {
+        vehicleId: vehicle._id,
+        modelName: stock?.modelName ?? "Unknown Model",
+      },
+    });
+  }
+);
+
+/**
  * @desc    Create a new service booking (authenticated customers only)
  * @route   POST /api/service-bookings
  * @access  Private (Customer)
@@ -23,7 +70,7 @@ import { FREE_SERVICES, PAID_SERVICES } from "../../types/serviceBooking.types";
 export const createServiceBooking = asyncHandler(
   async (req: Request, res: Response) => {
     const {
-      modelName, // CustomerVehicle reference
+      vehicle,
       serviceType, // Single service only
       branch, // Branch reference
       appointmentDate,
@@ -38,7 +85,7 @@ export const createServiceBooking = asyncHandler(
 
     // Validate required fields
     if (
-      !modelName ||
+      !vehicle ||
       !serviceType ||
       !branch ||
       !appointmentDate ||
@@ -75,13 +122,13 @@ export const createServiceBooking = asyncHandler(
     }
 
     // Validate vehicle belongs to customer
-    if (!mongoose.Types.ObjectId.isValid(modelName)) {
+    if (!mongoose.Types.ObjectId.isValid(vehicle)) {
       res.status(400);
       throw new Error("Invalid vehicle ID");
     }
 
     const customerVehicle = await CustomerVehicleModel.findOne({
-      _id: modelName,
+      _id: vehicle,
       customer: req.customer._id,
       isActive: true,
     }).populate("stockConcept");
@@ -119,9 +166,6 @@ export const createServiceBooking = asyncHandler(
       throw new Error("Invalid time format. Use HH:MM format");
     }
 
-    const appointmentMinutes =
-      parseInt(timeMatch[1]) * 60 + parseInt(timeMatch[2]);
-
     // Check availability with 20-minute buffer
     const isAvailable = await ServiceBookingModel.checkAvailabilityWithBuffer(
       branch,
@@ -140,7 +184,7 @@ export const createServiceBooking = asyncHandler(
     // Create the service booking
     const serviceBooking = await ServiceBookingModel.create({
       customer: req.customer._id,
-      modelName,
+      vehicle,
       serviceType,
       usedServices: [serviceType], // Track this service as used
       branch,

@@ -4,13 +4,22 @@ import {
   BookingsResponse,
   CreateBookingRequest,
   CreateBookingResponse,
+  CustomerVehicleInfoResponse,
   ServiceBooking,
   ServiceStatsResponse,
 } from "@/types/serviceBooking.types";
 
 export const serviceBookingCustomerApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    createServiceBooking: builder.mutation<CreateBookingResponse, CreateBookingRequest>({
+    getMyVehicleInfo: builder.query<CustomerVehicleInfoResponse, void>({
+      query: () => "/service-bookings/my-vehicle-info",
+      extraOptions: { isCustomer: true },
+      providesTags: ["CustomerVehicle"],
+    }),
+    createServiceBooking: builder.mutation<
+      CreateBookingResponse,
+      CreateBookingRequest
+    >({
       query: (data) => ({
         url: "/service-bookings",
         method: "POST",
@@ -22,7 +31,13 @@ export const serviceBookingCustomerApi = apiSlice.injectEndpoints({
 
     getMyBookings: builder.query<
       BookingsResponse,
-      { status?: string; page?: number; limit?: number; sortBy?: string; sortOrder?: string }
+      {
+        status?: string;
+        page?: number;
+        limit?: number;
+        sortBy?: string;
+        sortOrder?: string;
+      }
     >({
       query: (params = {}) => {
         const searchParams = new URLSearchParams();
@@ -41,20 +56,29 @@ export const serviceBookingCustomerApi = apiSlice.injectEndpoints({
       providesTags: ["BookingStats"],
     }),
 
-    checkAvailability: builder.query<AvailabilityResponse, { branchId: string; date: string }>({
+    checkAvailability: builder.query<
+      AvailabilityResponse,
+      { branchId: string; date: string }
+    >({
       query: ({ branchId, date }) =>
         `/service-bookings/availability?branchId=${branchId}&date=${date}`,
       extraOptions: { isCustomer: true },
       providesTags: ["Availability"],
     }),
 
-    getBookingById: builder.query<{ success: boolean; data: ServiceBooking }, string>({
+    getBookingById: builder.query<
+      { success: boolean; data: ServiceBooking },
+      string
+    >({
       query: (id) => `/service-bookings/${id}`,
       extraOptions: { isCustomer: true },
       providesTags: (_result, _error, id) => [{ type: "ServiceBooking", id }],
     }),
 
-    cancelBooking: builder.mutation<{ success: boolean; message: string }, { id: string; reason?: string }>({
+    cancelBooking: builder.mutation<
+      { success: boolean; message: string },
+      { id: string; reason?: string }
+    >({
       query: ({ id, reason }) => ({
         url: `/service-bookings/${id}/cancel`,
         method: "DELETE",
@@ -67,6 +91,7 @@ export const serviceBookingCustomerApi = apiSlice.injectEndpoints({
 });
 
 export const {
+  useGetMyVehicleInfoQuery,
   useCreateServiceBookingMutation,
   useGetMyBookingsQuery,
   useGetMyServiceStatsQuery,

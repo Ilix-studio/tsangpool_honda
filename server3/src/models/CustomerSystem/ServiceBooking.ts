@@ -37,10 +37,6 @@ export interface IServiceBooking extends Document {
   serviceNotes?: string;
   internalNotes?: string;
 
-  // Approval and terms
-  termsAccepted?: boolean;
-  termsAcceptedAt?: Date;
-
   // Notification tracking
   adminNotificationSent?: boolean;
   notificationSentAt?: Date;
@@ -189,24 +185,6 @@ const serviceBookingSchema = new Schema<IServiceBooking>(
       enum: ["branch", "home", "office", "roadside"],
     },
 
-    // Additional Information
-    specialRequests: {
-      type: String,
-      maxlength: [500, "Special requests cannot exceed 500 characters"],
-      trim: true,
-    },
-
-    serviceOptions: {
-      isDropOff: {
-        type: Boolean,
-        default: false,
-      },
-      willWaitOnsite: {
-        type: Boolean,
-        default: false,
-      },
-    },
-
     // System Fields
     bookingId: {
       type: String,
@@ -256,16 +234,6 @@ const serviceBookingSchema = new Schema<IServiceBooking>(
     internalNotes: {
       type: String,
       trim: true,
-    },
-
-    // Approval and terms
-    termsAccepted: {
-      type: Boolean,
-      default: false,
-    },
-
-    termsAcceptedAt: {
-      type: Date,
     },
 
     // Notification tracking

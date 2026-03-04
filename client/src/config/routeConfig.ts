@@ -5,6 +5,7 @@ import { lazy } from "react";
 import Home from "../Home";
 import NotFoundPage from "../mainComponents/NotFoundPage";
 import { ViewBikeImage } from "@/mainComponents/Admin/Bikes/ViewBikeImage";
+import { SimpleBookService } from "@/mainComponents/BookService/SimpleBookService";
 
 export const immediateRoutes = [
   {
@@ -37,9 +38,7 @@ const ScooterDetailPage = lazy(
 const CompareBike = lazy(
   () => import("../mainComponents/BikeDetails/CompareBikes/CompareBike")
 );
-const BookServicePage = lazy(
-  () => import("../mainComponents/BookService/BookServicePage")
-);
+
 const SearchResults = lazy(
   () => import("../mainComponents/Search/SearchResults")
 );
@@ -282,7 +281,7 @@ const createCustomerRoutes = () => {
     // Select Services by Admin
 
     { path: "/customer/services/vas", component: ActivateVAS },
-    { path: "/customer/book-service", component: BookServicePage },
+    { path: "/customer/book-service", component: SimpleBookService },
     { path: "/customer/attach-stickers", component: UseToken },
   ];
 };
@@ -312,17 +311,18 @@ export const routeConfig: Record<
   },
   "/customer/services": {
     title: "My Services",
-    subtitle: "Manage your service bookings",
+    subtitle: "",
     showBack: true,
     backTo: "/customer/dashboard",
     menuItems: [
       { label: "Book Service", href: "/customer/services" },
       { label: "Service History", href: "/customer/service-history" },
+      { label: "Customer Support", href: "/customer/support" },
     ],
   },
   "/customer/book-service": {
     title: "Book Service",
-    subtitle: "Schedule your motorcycle service",
+    subtitle: "",
     showBack: true,
     backTo: "/customer/dashboard",
     menuItems: [
@@ -345,6 +345,12 @@ export const routeConfig: Record<
   "/customer/profile-info": {
     title: "My Profile",
     subtitle: "Manage your account information",
+    showBack: true,
+    backTo: "/customer/dashboard",
+  },
+  "/customer/support": {
+    title: "Customer Support",
+    subtitle: "Support System",
     showBack: true,
     backTo: "/customer/dashboard",
   },
