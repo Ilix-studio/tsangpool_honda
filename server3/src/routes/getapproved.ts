@@ -23,6 +23,7 @@ const router = express.Router();
 
 // Public routes - SPECIFIC ROUTES FIRST
 router.post("/check-status", checkApplicationStatus);
+// two forms
 router.post("/with-bike", submitApplicationWithBike);
 router.post("/add", submitApplication); // This must come after more specific POST routes
 

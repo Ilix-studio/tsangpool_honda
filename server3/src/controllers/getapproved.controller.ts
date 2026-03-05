@@ -72,7 +72,7 @@ export const submitApplication = asyncHandler(
     });
 
     logger.info(
-      `New GetApproved application submitted: ${application.applicationId} by ${application.fullName}`,
+      `New GetApproved application submitted: ${application.applicationId} by ${application.fullName}`
     );
 
     res.status(201).json({
@@ -84,7 +84,7 @@ export const submitApplication = asyncHandler(
           "Application submitted successfully. You will receive a response within 24 hours.",
       },
     });
-  },
+  }
 );
 
 /**
@@ -160,7 +160,7 @@ export const getAllApplications = asyncHandler(
       currentPage: Number(page),
       data: applications,
     });
-  },
+  }
 );
 
 /**
@@ -195,7 +195,7 @@ export const getApplicationById = asyncHandler(
       success: true,
       data: application,
     });
-  },
+  }
 );
 
 /**
@@ -246,7 +246,7 @@ export const updateApplicationStatus = asyncHandler(
     if (status === "pre-approved" && preApprovalAmount) {
       await application.setPreApproval(
         preApprovalAmount,
-        preApprovalValidDays || 30,
+        preApprovalValidDays || 30
       );
     }
 
@@ -255,7 +255,7 @@ export const updateApplicationStatus = asyncHandler(
     await application.populate("reviewedBy", "name email");
 
     logger.info(
-      `Application ${application.applicationId} status updated to ${status} by admin ${reviewerId}`,
+      `Application ${application.applicationId} status updated to ${status} by admin ${reviewerId}`
     );
 
     res.status(200).json({
@@ -263,7 +263,7 @@ export const updateApplicationStatus = asyncHandler(
       data: application,
       message: "Application status updated successfully",
     });
-  },
+  }
 );
 
 /**
@@ -292,14 +292,14 @@ export const deleteApplication = asyncHandler(
     await GetApproved.deleteOne({ _id: application._id });
 
     logger.info(
-      `Application ${application.applicationId} deleted by admin ${req.user?.id}`,
+      `Application ${application.applicationId} deleted by admin ${req.user?.id}`
     );
 
     res.status(200).json({
       success: true,
       message: "Application deleted successfully",
     });
-  },
+  }
 );
 
 /**
@@ -364,30 +364,21 @@ export const getApplicationStats = asyncHandler(
         totalApplications,
         recentApplications: recentApplicationsCount,
         averageMonthlyIncome: avgIncome[0]?.averageIncome || 0,
-        statusBreakdown: statusCounts.reduce(
-          (acc, item) => {
-            acc[item._id] = item.count;
-            return acc;
-          },
-          {} as Record<string, number>,
-        ),
-        employmentTypeBreakdown: employmentTypeCounts.reduce(
-          (acc, item) => {
-            acc[item._id] = item.count;
-            return acc;
-          },
-          {} as Record<string, number>,
-        ),
-        creditScoreBreakdown: creditScoreCounts.reduce(
-          (acc, item) => {
-            acc[item._id] = item.count;
-            return acc;
-          },
-          {} as Record<string, number>,
-        ),
+        statusBreakdown: statusCounts.reduce((acc, item) => {
+          acc[item._id] = item.count;
+          return acc;
+        }, {} as Record<string, number>),
+        employmentTypeBreakdown: employmentTypeCounts.reduce((acc, item) => {
+          acc[item._id] = item.count;
+          return acc;
+        }, {} as Record<string, number>),
+        creditScoreBreakdown: creditScoreCounts.reduce((acc, item) => {
+          acc[item._id] = item.count;
+          return acc;
+        }, {} as Record<string, number>),
       },
     });
-  },
+  }
 );
 
 /**
@@ -434,7 +425,7 @@ export const getApplicationsByBranch = asyncHandler(
       currentPage: Number(page),
       data: applications,
     });
-  },
+  }
 );
 
 /**
@@ -453,7 +444,7 @@ export const checkApplicationStatus = asyncHandler(
 
     const application = await GetApproved.findOne({ email, applicationId })
       .select(
-        "applicationId status preApprovalAmount preApprovalValidUntil createdAt",
+        "applicationId status preApprovalAmount preApprovalValidUntil createdAt"
       )
       .populate("branch", "name address");
 
@@ -473,7 +464,7 @@ export const checkApplicationStatus = asyncHandler(
         branch: application.branch,
       },
     });
-  },
+  }
 );
 
 /**
@@ -563,12 +554,12 @@ export const submitApplicationWithBike = asyncHandler(
     if (bikeEnquiry?.bikeId) {
       await application.populate(
         "bikeEnquiry.bikeId",
-        "modelName category price images",
+        "modelName category price images"
       );
     }
 
     logger.info(
-      `New GetApproved application with bike enquiry submitted: ${application.applicationId} by ${application.fullName}`,
+      `New GetApproved application with bike enquiry submitted: ${application.applicationId} by ${application.fullName}`
     );
 
     res.status(201).json({
@@ -584,7 +575,7 @@ export const submitApplicationWithBike = asyncHandler(
         } You will receive a response within 24 hours.`,
       },
     });
-  },
+  }
 );
 
 /**
@@ -675,7 +666,7 @@ export const getApplicationsWithBikes = asyncHandler(
       currentPage: Number(page),
       data: applications,
     });
-  },
+  }
 );
 
 /**
@@ -722,13 +713,13 @@ export const updateBikeEnquiry = asyncHandler(
     // Populate fields for response
     await application.populate(
       "bikeEnquiry.bikeId",
-      "modelName category price images year",
+      "modelName category price images year"
     );
     await application.populate("branch", "name address");
     await application.populate("reviewedBy", "name email");
 
     logger.info(
-      `Bike enquiry updated for application ${application.applicationId} by admin ${req.user?.id}`,
+      `Bike enquiry updated for application ${application.applicationId} by admin ${req.user?.id}`
     );
 
     res.status(200).json({
@@ -736,112 +727,8 @@ export const updateBikeEnquiry = asyncHandler(
       data: application,
       message: "Bike enquiry information updated successfully",
     });
-  },
+  }
 );
-
-/**
- * @desc    Get bike recommendations based on application
- * @route   GET /api/getapproved/:id/bike-recommendations
- * @access  Private (Admin only)
- */
-// export const getBikeRecommendations = asyncHandler(
-//   async (req: Request, res: Response) => {
-//     const { id } = req.params;
-
-//     let application;
-
-//     // Find application by MongoDB ID or application ID
-//     if (mongoose.Types.ObjectId.isValid(id)) {
-//       application = await GetApproved.findById(id);
-//     } else {
-//       application = await GetApproved.findOne({ applicationId: id });
-//     }
-
-//     if (!application) {
-//       res.status(404);
-//       throw new Error("Application not found");
-//     }
-
-//     // Build bike query based on application data
-//     const bikeQuery: any = { inStock: true };
-
-//     // Filter by category if specified
-//     if (application.bikeEnquiry?.category) {
-//       bikeQuery.category = application.bikeEnquiry.category;
-//     }
-
-//     // Filter by price range based on income and pre-approval
-//     let maxPrice = application.monthlyIncome * 24; // Conservative estimate: 24x monthly income
-//     if (application.preApprovalAmount) {
-//       maxPrice = Math.min(maxPrice, application.preApprovalAmount);
-//     }
-//     if (application.bikeEnquiry?.priceRange) {
-//       maxPrice = Math.min(maxPrice, application.bikeEnquiry.priceRange.max);
-//       bikeQuery.price = {
-//         $gte: application.bikeEnquiry.priceRange.min,
-//         $lte: maxPrice,
-//       };
-//     } else {
-//       bikeQuery.price = { $lte: maxPrice };
-//     }
-
-//     // Filter by preferred features
-//     if (
-//       application.bikeEnquiry?.preferredFeatures &&
-//       application.bikeEnquiry.preferredFeatures.length > 0
-//     ) {
-//       bikeQuery.features = { $in: application.bikeEnquiry.preferredFeatures };
-//     }
-
-//     // Filter by branch if specified
-//     if (application.branch) {
-//       bikeQuery.branch = application.branch;
-//     }
-
-//     // Get recommended bikes
-//     const recommendedBikes = await BikeModel.find(bikeQuery)
-//       .populate("branch", "name address")
-//       .limit(10)
-//       .sort({ price: 1 }); // Sort by price ascending
-
-//     // Calculate affordability scores
-//     const bikesWithScores = recommendedBikes.map((bike) => {
-//       // const monthlyEMI = calculateEMI(bike.price, 8.5, 36); // Assuming 8.5% APR, 36 months
-//       const affordabilityScore = (application.monthlyIncome * 0.4) / monthlyEMI; // 40% of income rule
-
-//       return {
-//         ...bike.toObject(),
-//         affordabilityScore: Math.min(affordabilityScore, 1),
-//         estimatedEMI: monthlyEMI,
-//         recommended: affordabilityScore >= 0.8, // Recommend if EMI is ≤ 80% of 40% income rule
-//       };
-//     });
-
-//     res.status(200).json({
-//       success: true,
-//       data: {
-//         application: {
-//           applicationId: application.applicationId,
-//           fullName: application.fullName,
-//           monthlyIncome: application.monthlyIncome,
-//           preApprovalAmount: application.preApprovalAmount,
-//           enquiryType: application.enquiryType,
-//           bikeEnquiry: application.bikeEnquiry,
-//         },
-//         recommendations: bikesWithScores.sort(
-//           (a, b) => b.affordabilityScore - a.affordabilityScore
-//         ),
-//         maxRecommendedPrice: maxPrice,
-//         criteriaUsed: {
-//           category: application.bikeEnquiry?.category || "all",
-//           priceRange: bikeQuery.price || { max: maxPrice },
-//           preferredFeatures: application.bikeEnquiry?.preferredFeatures || [],
-//           branch: application.branch || "all branches",
-//         },
-//       },
-//     });
-//   }
-// );
 
 /**
  * @desc    Get enquiry statistics
@@ -932,39 +819,30 @@ export const getEnquiryStats = asyncHandler(
     res.status(200).json({
       success: true,
       data: {
-        enquiryTypeBreakdown: enquiryTypeCounts.reduce(
-          (acc, item) => {
-            acc[item._id] = item.count;
-            return acc;
-          },
-          {} as Record<string, number>,
-        ),
-        categoryInterest: categoryInterest.reduce(
-          (acc, item) => {
-            acc[item._id] = item.count;
-            return acc;
-          },
-          {} as Record<string, number>,
-        ),
+        enquiryTypeBreakdown: enquiryTypeCounts.reduce((acc, item) => {
+          acc[item._id] = item.count;
+          return acc;
+        }, {} as Record<string, number>),
+        categoryInterest: categoryInterest.reduce((acc, item) => {
+          acc[item._id] = item.count;
+          return acc;
+        }, {} as Record<string, number>),
         tradeInStats: tradeInStats,
-        urgencyBreakdown: urgencyStats.reduce(
-          (acc, item) => {
-            acc[item._id] = item.count;
-            return acc;
-          },
-          {} as Record<string, number>,
-        ),
+        urgencyBreakdown: urgencyStats.reduce((acc, item) => {
+          acc[item._id] = item.count;
+          return acc;
+        }, {} as Record<string, number>),
         popularBikes: popularBikes,
       },
     });
-  },
+  }
 );
 
 // Helper function to calculate EMI
 function calculateEMI(
   principal: number,
   annualRate: number,
-  tenureMonths: number,
+  tenureMonths: number
 ): number {
   const monthlyRate = annualRate / 12 / 100;
   const emi =
