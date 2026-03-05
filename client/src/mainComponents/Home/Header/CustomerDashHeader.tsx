@@ -4,7 +4,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
@@ -43,7 +42,9 @@ export function CustomerDashHeader() {
   const navigate = useNavigate();
   const location = useLocation();
   const { isAuthenticated, firebaseToken } = useAuthForCustomer();
-  const { data } = useGetCustomerProfileQuery();
+  const { data, isLoading } = useGetCustomerProfileQuery();
+  const apiResponse = data as unknown as ApiResponse;
+  const profile = apiResponse?.data?.profile;
 
   const currentRoute = routeConfig[location.pathname] || {
     title: "Customer Portal",
@@ -71,10 +72,6 @@ export function CustomerDashHeader() {
   const handleBack = () => {
     currentRoute.backTo ? navigate(currentRoute.backTo) : navigate(-1);
   };
-
-  const apiResponse = data as unknown as ApiResponse;
-  const customerName = apiResponse.data;
-  const profile = customerName.profile;
 
   return (
     <header className='sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-100'>
@@ -166,10 +163,12 @@ export function CustomerDashHeader() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button className='flex items-center gap-2 px-2 py-1.5 rounded-xl hover:bg-gray-100 transition-colors group'>
-                  <div className='w-8 h-8 rounded-xl bg-white flex items-center justify-center shrink-0'></div>
+                  <div className='w-8 h-8 rounded-xl bg-red-50 flex items-center justify-center shrink-0'>
+                    <User className='w-4 h-4 text-red-500' />
+                  </div>
                   <div className='hidden sm:block text-left leading-none'>
                     <p className='text-xs font-semibold text-gray-900 truncate max-w-[80px]'>
-                      {profile.firstName}
+                      {isLoading ? "..." : profile?.firstName ?? "User"}
                     </p>
                   </div>
                   <ChevronDown className='w-4 h-4 text-gray-700 hidden sm:block group-hover:text-gray-600 transition-colors' />
@@ -181,14 +180,19 @@ export function CustomerDashHeader() {
                 align='end'
                 sideOffset={8}
               >
-                <DropdownMenuLabel className='px-3 py-2'>
-                  <p className='text-sm font-bold text-gray-900'>
-                    {/* {displayName} */}
-                  </p>
-                  <p className='text-xs text-gray-400 mt-0.5 truncate'>
-                    {profile.firstName} {profile.lastName}
-                  </p>
-                </DropdownMenuLabel>
+                <DropdownMenuTrigger asChild>
+                  <button className='flex items-center gap-2 px-2 py-1.5 rounded-xl hover:bg-gray-100 transition-colors group'>
+                    <div className='w-8 h-8 rounded-xl bg-red-50 flex items-center justify-center shrink-0'>
+                      <User className='w-4 h-4 text-red-500' />
+                    </div>
+                    <div className='hidden sm:block text-left leading-none'>
+                      <p className='text-xs font-semibold text-gray-900 truncate max-w-[80px]'>
+                        {isLoading ? "..." : profile?.firstName ?? "User"}
+                      </p>
+                    </div>
+                    <ChevronDown className='w-4 h-4 text-gray-700 hidden sm:block group-hover:text-gray-600 transition-colors' />
+                  </button>
+                </DropdownMenuTrigger>
 
                 <DropdownMenuSeparator className='my-1 bg-gray-100' />
 
