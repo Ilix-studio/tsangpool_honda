@@ -17,6 +17,10 @@ import { useGetVisitorStatsQuery } from "@/redux-store/services/visitorApi";
 import RecentMotorcycles from "./RecentMotocycles";
 import { useGetAllCustomersQuery } from "@/redux-store/services/customer/customerApi";
 import { formatTimeAgo, MetricTile, StatCard, StatCardProps } from "./StatCard";
+import { useGetAllVASQuery } from "@/redux-store/services/BikeSystemApi2/VASApi";
+import { useGetCSVBatchesQuery } from "@/redux-store/services/BikeSystemApi3/csvStockApi";
+import { useGetAllStockItemsQuery } from "@/redux-store/services/BikeSystemApi2/StockConceptApi";
+import { useGetAllBookingsQuery } from "@/redux-store/services/BikeSystemApi2/ServiceBookAdminApi";
 
 // ─── main ────────────────────────────────────────────────────────────────────
 const BranchQueries = () => {
@@ -27,6 +31,16 @@ const BranchQueries = () => {
   const { data: visitorStatsData } = useGetVisitorStatsQuery();
   const { data: customersData, isLoading: customersLoading } =
     useGetAllCustomersQuery({ limit: 1 });
+  const { data: vasData } = useGetAllVASQuery({});
+  const { data: csvBatchData } = useGetCSVBatchesQuery({ page: 1, limit: 1 });
+  const { data: stockData } = useGetAllStockItemsQuery({ page: 1, limit: 1 });
+
+  const stockTotal =
+    (csvBatchData?.pagination?.total ?? 0) + (stockData?.total ?? 0);
+  const { data: bookingsData } = useGetAllBookingsQuery({
+    page: 1,
+    limit: 1,
+  });
 
   const stats: Omit<StatCardProps, "index">[] = [
     {
@@ -58,6 +72,7 @@ const BranchQueries = () => {
     },
     {
       title: "Value-Added Services",
+      value: vasData?.total ?? "—",
       icon: TrendingUp,
       loading: false,
       description: "Activate VAS on vehicles",
@@ -66,6 +81,7 @@ const BranchQueries = () => {
     },
     {
       title: "Stock Queries",
+      value: stockTotal,
       icon: Activity,
       loading: false,
       description: "Vehicles in branch",
@@ -74,7 +90,7 @@ const BranchQueries = () => {
     },
     {
       title: "Service Bookings",
-      value: 10,
+      value: bookingsData?.total ?? "—",
       icon: Wrench,
       loading: false,
       description: "Active bookings",
