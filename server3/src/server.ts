@@ -86,7 +86,7 @@ app.use("/api/service-bookings", serviceBookingRoutes);
 app.use("/api/cloudinary", cloudinaryRoutes);
 app.use("/api/branch", branchRoutes);
 app.use("/api/enquiry-form", enquiryRoutes);
-app.use("/api/getapproved", getApprovedRoutes);
+app.use("/api/getapproved", getApprovedRoutes); // this
 app.use("/api/visitor", visitorRoutes);
 app.use("/api/scanfleet", scanfleetRoutes);
 

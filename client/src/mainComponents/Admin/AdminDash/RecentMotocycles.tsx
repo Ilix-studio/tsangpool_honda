@@ -1,9 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  useGetBikesQuery,
-  useDeleteBikeMutation,
-} from "@/redux-store/services/BikeSystemApi/bikeApi";
+import { useGetBikesQuery } from "@/redux-store/services/BikeSystemApi/bikeApi";
 import {
   Zap,
   Calendar,
@@ -11,14 +8,11 @@ import {
   AlertTriangle,
   Eye,
   Bike,
-  Trash2,
   Plus,
   ArrowRight,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { useState } from "react";
-import toast from "react-hot-toast";
 
 // ─── helpers ────────────────────────────────────────────────────────────────
 const formatPrice = (priceBreakdown: any): string => {
@@ -65,20 +59,16 @@ interface VehicleRowProps {
   vehicle: any;
   index: number;
   icon: React.ComponentType<{ className?: string }>;
-  editPath: string;
+
   imagePath: string;
-  isDeleting: boolean;
-  onDelete: (id: string, name: string) => void;
 }
 
 const VehicleRow = ({
   vehicle,
   index,
   icon: Icon,
-  editPath,
+
   imagePath,
-  isDeleting,
-  onDelete,
 }: VehicleRowProps) => {
   const stock = getStockStatus(vehicle.stockAvailable);
 
@@ -150,28 +140,6 @@ const VehicleRow = ({
             <span className='text-xs'>Images</span>
           </Button>
         </Link>
-        <Link to={`${editPath}/${vehicle._id}`}>
-          <Button
-            variant='ghost'
-            size='sm'
-            className='h-8 px-2.5 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-100'
-          >
-            <span className='text-xs'>Edit</span>
-          </Button>
-        </Link>
-        <Button
-          variant='ghost'
-          size='sm'
-          onClick={() => onDelete(vehicle._id, vehicle.modelName)}
-          disabled={isDeleting}
-          className='h-8 px-2.5 rounded-lg text-red-500 hover:text-red-700 hover:bg-red-50'
-        >
-          {isDeleting ? (
-            <div className='h-3.5 w-3.5 animate-spin border-2 border-red-500 border-t-transparent rounded-full' />
-          ) : (
-            <Trash2 className='h-3.5 w-3.5' />
-          )}
-        </Button>
       </div>
     </motion.div>
   );
@@ -186,11 +154,8 @@ interface VehicleListProps {
   isError: boolean;
   vehicleType: string;
   icon: React.ComponentType<{ className?: string }>;
-  editPath: string;
   addPath: string;
   imagePath: string;
-  deletingId: string | null;
-  onDelete: (id: string, name: string) => void;
 }
 
 const VehicleList = ({
@@ -200,9 +165,6 @@ const VehicleList = ({
   vehicleType,
   icon: Icon,
   imagePath,
-  editPath,
-  deletingId,
-  onDelete,
 }: VehicleListProps) => {
   if (isLoading) return <LoadingSkeleton />;
 
@@ -240,10 +202,7 @@ const VehicleList = ({
           vehicle={vehicle}
           index={index}
           icon={Icon}
-          editPath={editPath}
           imagePath={imagePath}
-          isDeleting={deletingId === vehicle._id}
-          onDelete={onDelete}
         />
       ))}
 
@@ -269,8 +228,6 @@ const VehicleList = ({
 
 // ─── main ─────────────────────────────────────────────────────────────────────
 const RecentMotorcycles = () => {
-  const [deletingId, setDeletingId] = useState<string | null>(null);
-
   const {
     data: bikesData,
     isLoading: bikesLoading,
@@ -292,22 +249,6 @@ const RecentMotorcycles = () => {
     sortBy: "createdAt",
     sortOrder: "desc",
   });
-
-  const [deleteBike] = useDeleteBikeMutation();
-
-  const handleDelete = async (vehicleId: string, vehicleName: string) => {
-    if (!window.confirm(`Delete "${vehicleName}"? This cannot be undone.`))
-      return;
-    setDeletingId(vehicleId);
-    try {
-      await deleteBike(vehicleId).unwrap();
-      toast.success(`${vehicleName} deleted`);
-    } catch (error: any) {
-      toast.error(error?.data?.error ?? "Failed to delete vehicle");
-    } finally {
-      setDeletingId(null);
-    }
-  };
 
   return (
     <div className='rounded-2xl bg-white border border-gray-100 shadow-sm overflow-hidden'>
@@ -370,11 +311,8 @@ const RecentMotorcycles = () => {
               isError={bikesError}
               vehicleType='Bike'
               icon={Bike}
-              editPath='/admin/addbikes/edit'
               addPath='/admin/bikes/add'
               imagePath='/admin/bikeimages'
-              deletingId={deletingId}
-              onDelete={handleDelete}
             />
           </TabsContent>
 
@@ -385,11 +323,8 @@ const RecentMotorcycles = () => {
               isError={scootiesError}
               vehicleType='Scooty'
               icon={Zap}
-              editPath='/admin/addbikes/edit'
               addPath='/admin/addscooties'
-              imagePath='/admin/scootypimages'
-              deletingId={deletingId}
-              onDelete={handleDelete}
+              imagePath='/admin/scootyimages'
             />
           </TabsContent>
         </Tabs>

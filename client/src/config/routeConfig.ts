@@ -154,8 +154,15 @@ const GetAllStockFiles = lazy(
   () => import("@/mainComponents/BikeSsytem3/GetAllStockFiles")
 );
 
-const FirstDash = lazy(
-  () => import("@/mainComponents/CustomerSystem/Dashboards/FirstDash")
+const FinanceQueries = lazy(
+  () => import("@/mainComponents/Admin/AdminDash/FinanceEnquiry/FinanceQueries")
+);
+const ViewBikeImages = lazy(
+  () => import("@/mainComponents/Admin/Bikes/ViewBike/ViewBikeImages")
+);
+
+const ViewScootyImages = lazy(
+  () => import("@/mainComponents/Admin/Bikes/ViewBike/ViewScootymages")
 );
 
 // Create admin routes array
@@ -177,6 +184,8 @@ const createAdminRoutes = () => [
   { path: "/admin/bikes/:bikeId/images/add", component: AddBikeImage },
   { path: "/admin/bikes/:bikeId/images/edit", component: EditBikeImage },
   { path: "/admin/bikes/images/:id", component: ViewBikeImage },
+  { path: "/admin/bikeimages/:bikeId", component: ViewBikeImages },
+  { path: "/admin/scootyimages/:bikeId", component: ViewScootyImages },
 
   // Customer Management
   { path: "/admin/customers/signup", component: CustomerSignUp },
@@ -196,6 +205,8 @@ const createAdminRoutes = () => [
 
   //Service Booking
   { path: "/admin/service-bookings", component: AdminBookingsManager },
+  //Finance Queries
+  { path: "/admin/finanace-query", component: FinanceQueries },
 ];
 
 export const adminRoutes = createAdminRoutes();
@@ -244,6 +255,10 @@ const CustomerCSVStock = lazy(
   () => import("@/mainComponents/CustomerSystem/SelectStock/CustomerCSVStock")
 );
 const UseToken = lazy(() => import("@/mainComponents/Scanfleet/UseToken"));
+
+const FirstDash = lazy(
+  () => import("@/mainComponents/CustomerSystem/Dashboards/FirstDash")
+);
 
 const CustomerVehicleDetail = lazy(
   () => import("@/mainComponents/BikeSystem2/CustomerVehicleDetail")

@@ -6,7 +6,9 @@ import {
   GetApplicationByIdResponse,
   GetApplicationsFilters,
   GetApplicationsResponse,
+  GetApplicationsWithBikesFilters,
   GetStatsResponse,
+  GetStatsResponseWithBikes,
   SubmitApplicationRequest,
   SubmitApplicationResponse,
   UpdateStatusRequest,
@@ -65,7 +67,32 @@ export const getApprovedApi = apiSlice.injectEndpoints({
         if (filters.endDate) params.append("endDate", filters.endDate);
         if (filters.branch) params.append("branch", filters.branch);
         const queryString = params.toString();
-        return `/getapproved${queryString ? `?${queryString}` : ""}`;
+        return `/getapproved/all${queryString ? `?${queryString}` : ""}`;
+      },
+      providesTags: ["GetApproved"],
+    }),
+    getApplicationsWithBikes: builder.query<
+      GetStatsResponseWithBikes,
+      GetApplicationsWithBikesFilters
+    >({
+      query: (filters = {}) => {
+        const params = new URLSearchParams();
+        if (filters.page !== undefined)
+          params.append("page", filters.page.toString());
+        if (filters.limit !== undefined)
+          params.append("limit", filters.limit.toString());
+        if (filters.status) params.append("status", filters.status);
+        if (filters.enquiryType)
+          params.append("enquiryType", filters.enquiryType);
+        if (filters.category) params.append("category", filters.category);
+        if (filters.urgency) params.append("urgency", filters.urgency);
+        if (filters.hasTradeIn !== undefined)
+          params.append("hasTradeIn", String(filters.hasTradeIn));
+        if (filters.search) params.append("search", filters.search);
+        if (filters.sortBy) params.append("sortBy", filters.sortBy);
+        if (filters.sortOrder) params.append("sortOrder", filters.sortOrder);
+        const qs = params.toString();
+        return `/getapproved/with-bikes${qs ? `?${qs}` : ""}`;
       },
       providesTags: ["GetApproved"],
     }),
@@ -139,4 +166,7 @@ export const {
   useLazyGetApplicationByIdQuery,
   useLazyGetApplicationStatsQuery,
   useLazyGetApplicationsByBranchQuery,
+  //
+  useGetApplicationsWithBikesQuery,
+  useLazyGetApplicationsWithBikesQuery,
 } = getApprovedApi;

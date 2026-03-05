@@ -1,13 +1,15 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import {
-  Users,
   AlertTriangle,
   Package,
   ArrowUpRight,
   ChevronRight,
+  BanknoteIcon,
+  MessageCircleCode,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useGetAllApplicationsQuery } from "@/redux-store/services/customer/getApprovedApi";
 
 interface StatCardProps {
   title: string;
@@ -36,13 +38,10 @@ const StatCard = ({
     transition={{ duration: 0.45, delay: index * 0.07, ease: "easeOut" }}
     className='group relative overflow-hidden rounded-2xl bg-white border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-300'
   >
-    {/* accent bar */}
     <div
       className='absolute top-0 left-0 h-1 w-full'
       style={{ background: accent }}
     />
-
-    {/* subtle grid texture */}
     <div
       className='absolute inset-0 opacity-[0.025] pointer-events-none'
       style={{
@@ -52,7 +51,6 @@ const StatCard = ({
     />
 
     <div className='relative p-5 flex flex-col gap-4'>
-      {/* header */}
       <div className='flex items-start justify-between'>
         <div
           className='flex items-center justify-center w-11 h-11 rounded-xl'
@@ -60,7 +58,6 @@ const StatCard = ({
         >
           <Icon className='w-5 h-5' style={{ color: accent }} />
         </div>
-
         <Link to={action.href}>
           <motion.div
             whileHover={{ scale: 1.1, rotate: -5 }}
@@ -71,7 +68,6 @@ const StatCard = ({
         </Link>
       </div>
 
-      {/* value */}
       <div>
         <p className='text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1'>
           {title}
@@ -86,12 +82,11 @@ const StatCard = ({
         <p className='text-xs text-gray-400 mt-1'>{description}</p>
       </div>
 
-      {/* action */}
       <Link to={action.href}>
         <Button
           variant='ghost'
           size='sm'
-          className='w-full justify-between px-3 h-9 rounded-xl bg-gray-50 hover:bg-gray-100 text-gray-600 hover:text-gray-900 transition-all group/btn'
+          className='w-full justify-between px-3 h-9 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-600 hover:text-gray-900 transition-all group/btn'
         >
           <span className='text-xs font-medium'>{action.label}</span>
           <ChevronRight className='w-3 h-3 opacity-0 group-hover/btn:opacity-100 transition-opacity' />
@@ -101,43 +96,61 @@ const StatCard = ({
   </motion.div>
 );
 
-const stats: Omit<StatCardProps, "index">[] = [
-  {
-    title: "Web Service Customers",
-    value: "2,000",
-    icon: Users,
-    loading: false,
-    description: "Total registered users",
-    accent: "#f97316",
-    action: { label: "View Report", href: "/admin/reports" },
-  },
+const CustomerQueries = () => {
+  const { data: financeData, isLoading: financeLoading } =
+    useGetAllApplicationsQuery({
+      page: 1,
+      limit: 1,
+      sortBy: "createdAt",
+      sortOrder: "desc",
+    });
 
-  {
-    title: "Accident Reports",
-    value: 10,
-    icon: AlertTriangle,
-    loading: false,
-    description: "Pending review",
-    accent: "#ef4444",
-    action: { label: "View Reports", href: "/admin/reports" },
-  },
-  {
-    title: "Parts Ordered",
-    value: 33,
-    icon: Package,
-    loading: false,
-    description: "Orders in pipeline",
-    accent: "#8b5cf6",
-    action: { label: "View Orders", href: "/admin/reports" },
-  },
-];
+  const stats: Omit<StatCardProps, "index">[] = [
+    {
+      title: "Finance Enquiry",
+      value: financeData?.total ?? "—",
+      icon: BanknoteIcon,
+      loading: financeLoading,
+      description: "Total finance applications",
+      accent: "#f97316",
+      action: { label: "View Finance Enquiry", href: "/admin/finanace-query" },
+    },
+    {
+      title: "Message by Users",
+      value: 10,
+      icon: MessageCircleCode,
+      loading: false,
+      description: "Pending review",
+      accent: "#ef4444",
+      action: { label: "View Reports", href: "/admin/reports" },
+    },
+    {
+      title: "Accident Reports",
+      value: 10,
+      icon: AlertTriangle,
+      loading: false,
+      description: "Pending review",
+      accent: "#ef4444",
+      action: { label: "View Reports", href: "/admin/reports" },
+    },
+    {
+      title: "Parts Ordered",
+      value: 33,
+      icon: Package,
+      loading: false,
+      description: "Orders in pipeline",
+      accent: "#8b5cf6",
+      action: { label: "View Orders", href: "/admin/orders" },
+    },
+  ];
 
-const CustomerQueries = () => (
-  <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8'>
-    {stats.map((stat, i) => (
-      <StatCard key={stat.title} {...stat} index={i} />
-    ))}
-  </div>
-);
+  return (
+    <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8'>
+      {stats.map((stat, i) => (
+        <StatCard key={stat.title} {...stat} index={i} />
+      ))}
+    </div>
+  );
+};
 
 export default CustomerQueries;
