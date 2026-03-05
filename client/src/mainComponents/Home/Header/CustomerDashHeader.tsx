@@ -1,21 +1,7 @@
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  User,
-  LogOut,
-  Home,
-  Wrench,
-  Phone,
-  ArrowLeft,
-  ChevronDown,
-} from "lucide-react";
+
+import { User, LogOut, Home, Wrench, Phone, ArrowLeft } from "lucide-react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAppDispatch } from "@/hooks/redux";
 import { useAuthForCustomer } from "@/hooks/useAuthforCustomer";
@@ -159,77 +145,26 @@ export function CustomerDashHeader() {
               </Button>
             </Link>
 
-            {/* User dropdown */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button className='flex items-center gap-2 px-2 py-1.5 rounded-xl hover:bg-gray-100 transition-colors group'>
-                  <div className='w-8 h-8 rounded-xl bg-red-50 flex items-center justify-center shrink-0'>
-                    <User className='w-4 h-4 text-red-500' />
-                  </div>
-                  <div className='hidden sm:block text-left leading-none'>
-                    <p className='text-xs font-semibold text-gray-900 truncate max-w-[80px]'>
-                      {isLoading ? "..." : profile?.firstName ?? "User"}
-                    </p>
-                  </div>
-                  <ChevronDown className='w-4 h-4 text-gray-700 hidden sm:block group-hover:text-gray-600 transition-colors' />
-                </button>
-              </DropdownMenuTrigger>
+            <div className='flex items-center gap-2'>
+              <button className='flex items-center gap-2 px-2 py-1.5 rounded-xl hover:bg-gray-100 transition-colors group'>
+                <div className='w-8 h-8 rounded-xl bg-red-50 flex items-center justify-center shrink-0'>
+                  <User className='w-4 h-4 text-red-500' />
+                </div>
+                <div className='hidden sm:block text-left leading-none'>
+                  <p className='text-xs font-semibold text-gray-900 truncate max-w-[80px]'>
+                    {isLoading ? "..." : profile?.firstName ?? "User"}
+                  </p>
+                </div>
+              </button>
 
-              <DropdownMenuContent
-                className='w-56 rounded-2xl border border-gray-100 shadow-lg p-1.5'
-                align='end'
-                sideOffset={8}
+              <button
+                onClick={handleLogout}
+                className='flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-red-600 hover:bg-red-50 transition-colors'
               >
-                <DropdownMenuTrigger asChild>
-                  <button className='flex items-center gap-2 px-2 py-1.5 rounded-xl hover:bg-gray-100 transition-colors group'>
-                    <div className='w-8 h-8 rounded-xl bg-red-50 flex items-center justify-center shrink-0'>
-                      <User className='w-4 h-4 text-red-500' />
-                    </div>
-                    <div className='hidden sm:block text-left leading-none'>
-                      <p className='text-xs font-semibold text-gray-900 truncate max-w-[80px]'>
-                        {isLoading ? "..." : profile?.firstName ?? "User"}
-                      </p>
-                    </div>
-                    <ChevronDown className='w-4 h-4 text-gray-700 hidden sm:block group-hover:text-gray-600 transition-colors' />
-                  </button>
-                </DropdownMenuTrigger>
-
-                <DropdownMenuSeparator className='my-1 bg-gray-100' />
-
-                <DropdownMenuItem asChild className='rounded-xl cursor-pointer'>
-                  <Link
-                    to='/customer/profile-info'
-                    className='flex items-center gap-2.5 px-3 py-2'
-                  >
-                    <div className='w-7 h-7 rounded-lg bg-blue-50 flex items-center justify-center'>
-                      <User className='w-3.5 h-3.5 text-blue-600' />
-                    </div>
-                    <span className='text-sm font-medium'>Profile</span>
-                  </Link>
-                </DropdownMenuItem>
-
-                <DropdownMenuItem asChild className='rounded-xl cursor-pointer'>
-                  <Link to='/' className='flex items-center gap-2.5 px-3 py-2'>
-                    <div className='w-7 h-7 rounded-lg bg-gray-100 flex items-center justify-center'>
-                      <Home className='w-3.5 h-3.5 text-gray-600' />
-                    </div>
-                    <span className='text-sm font-medium'>Back to Website</span>
-                  </Link>
-                </DropdownMenuItem>
-
-                <DropdownMenuSeparator className='my-1 bg-gray-100' />
-
-                <DropdownMenuItem
-                  onClick={handleLogout}
-                  className='rounded-xl cursor-pointer flex items-center gap-2.5 px-3 py-2 text-red-600 hover:bg-red-50 focus:bg-red-50'
-                >
-                  <div className='w-7 h-7 rounded-lg bg-red-50 flex items-center justify-center'>
-                    <LogOut className='w-3.5 h-3.5 text-red-500' />
-                  </div>
-                  <span className='text-sm font-medium'>Log out</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+                <LogOut className='w-3.5 h-3.5' />
+                <span className='hidden sm:block'>Logout</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
