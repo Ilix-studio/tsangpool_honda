@@ -6,7 +6,6 @@ import Home from "../Home";
 import NotFoundPage from "../mainComponents/NotFoundPage";
 import { ViewBikeImage } from "@/mainComponents/Admin/Bikes/ViewBikeImage";
 import { SimpleBookService } from "@/mainComponents/BookService/SimpleBookService";
-import BikeImageManager from "@/mainComponents/Admin/AdminDash/BikeImageManager";
 
 export const immediateRoutes = [
   {
@@ -166,6 +165,11 @@ const ViewScootyImages = lazy(
   () => import("@/mainComponents/Admin/Bikes/ViewBike/ViewScootymages")
 );
 
+const BikeImageManager = lazy(
+  () => import("@/mainComponents/Admin/AdminDash/BikeImageManager")
+);
+const SeeMessages = lazy(() => import("@/mainComponents/Admin/SeeMessages"));
+
 // Create admin routes array
 const createAdminRoutes = () => [
   // Authentication
@@ -210,6 +214,8 @@ const createAdminRoutes = () => [
   { path: "/admin/service-bookings", component: AdminBookingsManager },
   //Finance Queries
   { path: "/admin/finanace-query", component: FinanceQueries },
+  //Contact Section
+  { path: "/admin/any-messages", component: SeeMessages },
 ];
 
 export const adminRoutes = createAdminRoutes();
