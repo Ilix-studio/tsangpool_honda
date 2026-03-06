@@ -6,6 +6,7 @@ import Home from "../Home";
 import NotFoundPage from "../mainComponents/NotFoundPage";
 import { ViewBikeImage } from "@/mainComponents/Admin/Bikes/ViewBikeImage";
 import { SimpleBookService } from "@/mainComponents/BookService/SimpleBookService";
+import BikeImageManager from "@/mainComponents/Admin/AdminDash/BikeImageManager";
 
 export const immediateRoutes = [
   {
@@ -186,6 +187,8 @@ const createAdminRoutes = () => [
   { path: "/admin/bikes/images/:id", component: ViewBikeImage },
   { path: "/admin/bikeimages/:bikeId", component: ViewBikeImages },
   { path: "/admin/scootyimages/:bikeId", component: ViewScootyImages },
+  //  admin view bikes
+  { path: "/admin/bikes/add/:id/images", component: BikeImageManager },
 
   // Customer Management
   { path: "/admin/customers/signup", component: CustomerSignUp },
