@@ -2,6 +2,8 @@ import express, { Application, Request, Response, NextFunction } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import connectDB from "./config/dbConnection";
+import rateLimit from "express-rate-limit";
+import corsOptions from "./config/corOptions";
 import { errorHandler, routeNotFound } from "./middleware/errorMiddleware";
 //Routes
 import auth from "./routes/auth";
@@ -12,20 +14,15 @@ import branchRoutes from "./routes/branches";
 import cloudinaryRoutes from "./routes/cloudinary";
 import getApprovedRoutes from "./routes/getapproved";
 import visitorRoutes from "./routes/visitorR";
-//new
+import contactRoutes from "./routes/contact";
 import customerRoutes from "./routes/customerRoutes/customer";
 import customerProfile from "./routes/customerRoutes/customerProfile";
-
 import serviceBookingRoutes from "./routes/customerRoutes/serviceBooking";
 import valueAddedServicesRoutes from "./routes/BikeSystemRoutes2/VAS";
 import vehicleInfoRoutes from "./routes/BikeSystemRoutes2/CustomerVehicleRoutes";
 import stockConceptRoutes from "./routes/BikeSystemRoutes2/stockConcept";
-//
 import csvStockImportRoutes from "./routes/BikeSystemRoutes3/csvStock";
 import scanfleetRoutes from "./routes/Scanfleet/routes.scanfleet";
-
-import corsOptions from "./config/corOptions";
-import rateLimit from "express-rate-limit";
 
 dotenv.config();
 
@@ -68,6 +65,7 @@ app.use("/api", apiLimiter);
 
 // Admin & Auth
 app.use("/api/adminLogin", auth);
+app.use("/api/branch", branchRoutes);
 
 // Bike System
 app.use("/api/bikes", bikes);
@@ -84,10 +82,12 @@ app.use("/api/service-bookings", serviceBookingRoutes);
 
 // Other Services
 app.use("/api/cloudinary", cloudinaryRoutes);
-app.use("/api/branch", branchRoutes);
 app.use("/api/enquiry-form", enquiryRoutes);
 app.use("/api/getapproved", getApprovedRoutes); // this
+app.use("/api/messages", contactRoutes);
 app.use("/api/visitor", visitorRoutes);
+
+//Third Party
 app.use("/api/scanfleet", scanfleetRoutes);
 
 // Global error handling middleware

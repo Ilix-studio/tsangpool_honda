@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { validationResult, ValidationChain } from "express-validator";
 import { body } from "express-validator";
+import rateLimit from "express-rate-limit";
 
 export const validateRequest = (
   req: Request,
@@ -41,3 +42,18 @@ export const validateBatchPhoneCheck: ValidationChain[] = [
     .matches(/^[6-9]\d{9}$/)
     .withMessage("Each phone number must be 10 digits starting with 6-9"),
 ];
+
+// Rate limiting for form submissions
+export const formLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max: 5, // Limit each IP to 5 form submissions per hour
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: "Too many form submissions, please try again later.",
+  handler: (req: Request, res: Response) => {
+    res.status(429).json({
+      success: false,
+      message: "Too many form submissions, please try again later.",
+    });
+  },
+});
