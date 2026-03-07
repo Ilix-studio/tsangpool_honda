@@ -7,8 +7,6 @@ import {
   Search,
   Filter,
   RefreshCw,
-  Eye,
-  Download,
   Shield,
   ShieldOff,
   ChevronLeft,
@@ -33,12 +31,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import toast from "react-hot-toast";
+
 import {
   AccidentReportFilters,
   ReportStatus,
   useGetAllAccidentReportsQuery,
-  useLazyDownloadAccidentReportsCsvQuery,
 } from "@/redux-store/services/accidentReportApi";
 import { useGetBranchesQuery } from "@/redux-store/services/branchApi";
 
@@ -100,9 +97,6 @@ const GetAllAccidentReports = () => {
   const { data: branchesRes } = useGetBranchesQuery();
   const branches = branchesRes?.data ?? [];
 
-  const [triggerDownload, { isFetching: isDownloading }] =
-    useLazyDownloadAccidentReportsCsvQuery();
-
   const reports = data?.data ?? [];
   const total = data?.total ?? 0;
   const pages = data?.pages ?? 1;
@@ -117,26 +111,6 @@ const GetAllAccidentReports = () => {
     },
     []
   );
-
-  const handleDownload = async () => {
-    try {
-      const blob = await triggerDownload({
-        status: filters.status,
-        branchId: filters.branchId,
-        isInsuranceAvailable: filters.isInsuranceAvailable,
-      }).unwrap();
-
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `accident_reports_${Date.now()}.csv`;
-      a.click();
-      URL.revokeObjectURL(url);
-      toast.success("CSV downloaded");
-    } catch {
-      toast.error("Download failed");
-    }
-  };
 
   // Client-side search filter (by reportId / location / title)
   const filtered = search.trim()
@@ -178,15 +152,6 @@ const GetAllAccidentReports = () => {
               className={`h-4 w-4 mr-1.5 ${isFetching ? "animate-spin" : ""}`}
             />
             Refresh
-          </Button>
-          <Button
-            size='sm'
-            onClick={handleDownload}
-            disabled={isDownloading}
-            className='bg-red-600 hover:bg-red-700 text-white'
-          >
-            <Download className='h-4 w-4 mr-1.5' />
-            {isDownloading ? "Downloading..." : "Export CSV"}
           </Button>
         </div>
       </div>
@@ -383,13 +348,14 @@ const GetAllAccidentReports = () => {
                         <TableCell className='text-right'>
                           <Button
                             variant='ghost'
-                            size='sm'
+                            size='icon'
+                            aria-label='Submit'
                             onClick={() =>
                               navigate(`/admin/accident-reports/${report._id}`)
                             }
                             className='h-8 w-8 p-0 hover:bg-red-50'
                           >
-                            <Eye className='h-4 w-4 text-gray-500' />
+                            View
                           </Button>
                         </TableCell>
                       </motion.tr>

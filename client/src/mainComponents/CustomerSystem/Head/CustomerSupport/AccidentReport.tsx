@@ -215,7 +215,7 @@ const AccidentReport: React.FC = () => {
 
   return (
     <div className='min-h-screen bg-gray-50 py-10 px-4'>
-      <div className='max-w-lg mx-auto'>
+      <div className=' mx-auto'>
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -12 }}
