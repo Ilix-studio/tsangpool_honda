@@ -59,6 +59,7 @@ export const apiSlice = createApi({
     "ScanFleetActivation",
     "ContactMessages",
     "ContactMessage",
+    "AccidentReport",
   ],
   endpoints: () => ({}),
 });

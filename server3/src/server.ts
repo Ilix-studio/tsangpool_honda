@@ -22,6 +22,8 @@ import valueAddedServicesRoutes from "./routes/BikeSystemRoutes2/VAS";
 import vehicleInfoRoutes from "./routes/BikeSystemRoutes2/CustomerVehicleRoutes";
 import stockConceptRoutes from "./routes/BikeSystemRoutes2/stockConcept";
 import csvStockImportRoutes from "./routes/BikeSystemRoutes3/csvStock";
+import accidentReports from "./routes/AdminFeature/accidentReport";
+//
 import scanfleetRoutes from "./routes/Scanfleet/routes.scanfleet";
 
 dotenv.config();
@@ -85,6 +87,7 @@ app.use("/api/cloudinary", cloudinaryRoutes);
 app.use("/api/enquiry-form", enquiryRoutes);
 app.use("/api/getapproved", getApprovedRoutes); // this
 app.use("/api/messages", contactRoutes);
+app.use("/api/accident-reports", accidentReports);
 app.use("/api/visitor", visitorRoutes);
 
 //Third Party
