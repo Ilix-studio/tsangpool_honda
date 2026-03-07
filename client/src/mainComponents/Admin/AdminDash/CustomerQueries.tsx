@@ -131,9 +131,9 @@ const CustomerQueries = () => {
       value: 10,
       icon: AlertTriangle,
       loading: false,
-      description: "Pending review",
+      description: "",
       accent: "#ef4444",
-      action: { label: "View Reports", href: "/admin/reports" },
+      action: { label: "View Reports", href: "/admin/accident-reports" },
     },
     {
       title: "Parts Ordered",

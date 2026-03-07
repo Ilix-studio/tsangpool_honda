@@ -294,7 +294,7 @@ function CallLogRow({ log }: { log: CallLog }) {
 
 // ─── Main Component ───────────────────────────────────────────────────────────────
 
-export default function CustomerSupport() {
+export default function ScanfleetSupport() {
   const [filter, setFilter] = useState<FilterStatus>("all");
   const [isRefreshing, setIsRefreshing] = useState(false);
 
