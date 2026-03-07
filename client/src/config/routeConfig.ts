@@ -170,6 +170,13 @@ const BikeImageManager = lazy(
 );
 const SeeMessages = lazy(() => import("@/mainComponents/Admin/SeeMessages"));
 
+const GetAllAccidentReports = lazy(
+  () => import("@/mainComponents/Admin/AcidentReport/GetAllAccidentReports")
+);
+const GetAllAccidentReportsById = lazy(
+  () => import("@/mainComponents/Admin/AcidentReport/GetAllAccidentReportsById")
+);
+
 // Create admin routes array
 const createAdminRoutes = () => [
   // Authentication
@@ -216,6 +223,9 @@ const createAdminRoutes = () => [
   { path: "/admin/finanace-query", component: FinanceQueries },
   //Contact Section
   { path: "/admin/any-messages", component: SeeMessages },
+  //
+  { path: "/admin/accident-reports", component: GetAllAccidentReports },
+  { path: "/admin/accident-reports/:id", component: GetAllAccidentReportsById },
 ];
 
 export const adminRoutes = createAdminRoutes();
@@ -251,7 +261,10 @@ const CustomerServices = lazy(
 );
 
 const CustomerSupport = lazy(
-  () => import("@/mainComponents/CustomerSystem/Head/CustomerSupport")
+  () =>
+    import(
+      "@/mainComponents/CustomerSystem/Head/CustomerSupport/CustomerSupport"
+    )
 );
 
 const CustomerProfile = lazy(
@@ -374,7 +387,7 @@ export const routeConfig: Record<
   },
   "/customer/support": {
     title: "Customer Support",
-    subtitle: "Support System",
+    subtitle: "",
     showBack: true,
     backTo: "/customer/dashboard",
   },
