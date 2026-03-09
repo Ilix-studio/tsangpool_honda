@@ -1,9 +1,8 @@
 import { Button } from "@/components/ui/button";
-import { ChevronRight, Sparkles } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const HeroSection = () => {
-  const currentYear = new Date().getFullYear();
   return (
     <>
       {/* Hero Section - responsive layout */}
@@ -54,12 +53,6 @@ const HeroSection = () => {
         <div className='relative z-10 container mx-auto px-4 lg:px-6 h-full flex items-center'>
           <div className='max-w-4xl'>
             {/* Floating Badge - responsive sizing */}
-            <div className='inline-flex items-center gap-2 bg-red-500/20 backdrop-blur-sm border border-red-500/30 rounded-full px-3 py-1.5 lg:px-4 lg:py-2 mb-6 lg:mb-8 animate-float'>
-              <Sparkles className='h-3 w-3 lg:h-4 lg:w-4 text-red-400' />
-              <span className='text-xs lg:text-sm font-medium text-red-400'>
-                New {currentYear} Models Available
-              </span>
-            </div>
 
             {/* Main Headline - responsive text sizes */}
             <h1 className='text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold mb-6 lg:mb-8 leading-tight'>
