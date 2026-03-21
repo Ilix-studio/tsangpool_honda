@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 import mongoose from "mongoose";
 import { StockConceptModel } from "../../models/BikeSystemModel2/StockConcept";
 import logger from "../../utils/logger";
+import { StockConceptCSVModel } from "../../models/BikeSystemModel3/StockConceptCSV";
 
 /**
  * @desc    Create new stock item
@@ -44,12 +45,41 @@ export const createStockItem = asyncHandler(
       res.status(400);
       throw new Error("Please provide all required fields");
     }
+    const normalizedEngine = engineNumber.toUpperCase();
+    const normalizedChassis = chassisNumber.toUpperCase();
+
+    const [duplicateInManual, duplicateInCSV] = await Promise.all([
+      StockConceptModel.findOne({
+        $or: [
+          { engineNumber: normalizedEngine },
+          { chassisNumber: normalizedChassis },
+        ],
+      })
+        .select("_id stockId")
+        .lean(),
+      StockConceptCSVModel.findOne({
+        $or: [
+          { engineNumber: normalizedEngine },
+          { chassisNumber: normalizedChassis },
+        ],
+      })
+        .select("_id stockId")
+        .lean(),
+    ]);
+
+    if (duplicateInManual || duplicateInCSV) {
+      const source = duplicateInManual ? "manual stock" : "CSV stock";
+      res.status(409);
+      throw new Error(
+        `Duplicate entry: engine/chassis number already exists in ${source}`
+      );
+    }
 
     // Generate stock ID
     const stockCount = await StockConceptModel.countDocuments();
     const stockId = `STK-${Date.now()}-${String(stockCount + 1).padStart(
       4,
-      "0",
+      "0"
     )}`;
 
     // Calculate pricing
@@ -93,7 +123,7 @@ export const createStockItem = asyncHandler(
       message: "Stock item created successfully",
       data: stockItem,
     });
-  },
+  }
 );
 
 /**
@@ -153,7 +183,7 @@ export const getAllStockItems = asyncHandler(
       currentPage: page,
       data: stockItems,
     });
-  },
+  }
 );
 
 export const getStockItemById = asyncHandler(
@@ -167,7 +197,7 @@ export const getStockItemById = asyncHandler(
 
     const stockItem = await StockConceptModel.findById(id).populate(
       "stockStatus.branchId",
-      "branchName address phone",
+      "branchName address phone"
     );
 
     if (!stockItem) {
@@ -179,7 +209,7 @@ export const getStockItemById = asyncHandler(
       success: true,
       data: stockItem,
     });
-  },
+  }
 );
 
 /**
@@ -212,7 +242,7 @@ export const getMyVehicles = asyncHandler(
       count: vehicles.length,
       data: vehicles,
     });
-  },
+  }
 );
 
 /**
@@ -258,5 +288,5 @@ export const getVehicleById = asyncHandler(
       success: true,
       data: vehicle,
     });
-  },
+  }
 );
